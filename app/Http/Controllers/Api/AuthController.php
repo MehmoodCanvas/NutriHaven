@@ -19,7 +19,8 @@ class AuthController extends Controller
                 'member_email' => 'required|email|unique:member,member_email',
                 'member_password' => 'required|min:6'
             ]);
-    
+            $imageName = time() . '_' . $request->file('member_profile')->getClientOriginalName();
+            $path = $request->file('member_profile')->storeAs('profile', $imageName, 'public');
             $member = Members::create([
                 'member_full_name' => $validatedData['member_full_name'],
                 'member_email' => $validatedData['member_email'],
@@ -33,12 +34,12 @@ class AuthController extends Controller
                 'member_height_in' => $request->member_height_in ?? null,
                 'member_goal' => $request->member_goal ?? null,
                 'member_exp' => $request->member_exp ?? null,
+                'member_profile'=>$imageName,
                 'member_excerise_place' => $request->member_excerise_place ?? null,
                 'member_status' => 'pending',
             ]);
-    
+         
             $token = $member->createToken('member_token')->plainTextToken;
-    
             return response()->json([
                 'message' => 'Signup successful',
                 'token' => $token,
