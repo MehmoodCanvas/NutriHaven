@@ -13,11 +13,11 @@ use Laravel\Sanctum\PersonalAccessToken;
 class AuthController extends Controller
 {
     public function register(Request $request){
-        try {
+    try {
             $validatedData = $request->validate([
-            'member_full_name' => 'required',
-            'member_email' => 'required|email|unique:member,member_email',
-            'member_password' => 'required|min:6'
+                'member_full_name' => 'required',
+                'member_email' => 'required|email|unique:member,member_email',
+                'member_password' => 'required|min:6'
             ]);
             $imageName = null;
             if ($request->hasFile('member_profile')) {
@@ -26,20 +26,20 @@ class AuthController extends Controller
             } 
             
             $member = Members::create([
-            'member_full_name' => $validatedData['member_full_name'],
-            'member_email' => $validatedData['member_email'],
-            'member_password' => Hash::make($validatedData['member_password']),
-            'member_profile' => $imageName ?? null,
-            'member_gender' => $request->json('member_gender'),
-            'member_age' => $request->json('member_age'),
-            'member_weight' => $request->json('member_weight'),
-            'member_weight_unit' => $request->json('member_weight_unit'),
-            'member_height_ft' => $request->json('member_height_ft'),
-            'member_height_in' => $request->json('member_height_in'),
-            'member_goal' => $request->json('member_goal'),
-            'member_exp' => $request->json('member_exp'),
-            'member_excerise_place' => $request->json('member_excerise_place'),
-            'member_status' => 'pending',
+                'member_full_name' => $validatedData['member_full_name'],
+                'member_email' => $validatedData['member_email'],
+                'member_password' => Hash::make($validatedData['member_password']),
+                'member_profile' => $imageName ?? null,
+                'member_gender' => $request->json('member_gender'),
+                'member_age' => $request->json('member_age'),
+                'member_weight' => $request->json('member_weight'),
+                'member_weight_unit' => $request->json('member_weight_unit'),
+                'member_height_ft' => $request->json('member_height_ft'),
+                'member_height_in' => $request->json('member_height_in'),
+                'member_goal' => $request->json('member_goal'),
+                'member_exp' => $request->json('member_exp'),
+                'member_excerise_place' => $request->json('member_excerise_place'),
+                'member_status' => 'pending',
             ]);
          
             $token = $member->createToken('member_token')->plainTextToken;
@@ -49,12 +49,12 @@ class AuthController extends Controller
             'user' => $member
             ], 201); 
         
-        } catch (ValidationException $e) {
+    } catch (ValidationException $e) {
             return response()->json([
             'message' => 'Validation failed',
             'errors' => $e->errors(),
             ], 422); 
-        } catch (\Exception $e) {
+    } catch (\Exception $e) {
             return response()->json([
             'message' => 'Something went wrong',
             'error' => $e->getMessage(),
