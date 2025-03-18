@@ -19,15 +19,17 @@ class AuthController extends Controller
             'member_email' => 'required|email|unique:member,member_email',
             'member_password' => 'required|min:6'
             ]);
-            
-            $imageName = time() . '_' . $request->json('member_profile');
-            $path = $request->file('member_profile')->storeAs('profile', $imageName, 'public');
+            $imageName = null;
+            if ($request->hasFile('member_profile')) {
+                $imageName = time() . '_' . $request->file('member_profile')->getClientOriginalName();
+                $path = $request->file('member_profile')->storeAs('profile', $imageName, 'public');
+            } 
             
             $member = Members::create([
             'member_full_name' => $validatedData['member_full_name'],
             'member_email' => $validatedData['member_email'],
             'member_password' => Hash::make($validatedData['member_password']),
-            'member_profile' => $imageName,
+            'member_profile' => $imageName ?? null,
             'member_gender' => $request->json('member_gender'),
             'member_age' => $request->json('member_age'),
             'member_weight' => $request->json('member_weight'),
