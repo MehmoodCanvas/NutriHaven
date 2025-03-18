@@ -15,46 +15,47 @@ class AuthController extends Controller
     public function register(Request $request){
         try {
             $validatedData = $request->validate([
-                'member_full_name' => 'required',
-                'member_email' => 'required|email|unique:member,member_email',
-                'member_password' => 'required|min:6'
+            'member_full_name' => 'required',
+            'member_email' => 'required|email|unique:member,member_email',
+            'member_password' => 'required|min:6'
             ]);
-            $imageName = time() . '_' . $request->file('member_profile')->getClientOriginalName();
+            
+            $imageName = time() . '_' . $request->json('member_profile');
             $path = $request->file('member_profile')->storeAs('profile', $imageName, 'public');
+            
             $member = Members::create([
-                'member_full_name' => $validatedData['member_full_name'],
-                'member_email' => $validatedData['member_email'],
-                'member_password' => Hash::make($validatedData['member_password']),
-                'member_profile' => $request->member_profile ?? null,
-                'member_gender' => $request->member_gender ?? null,
-                'member_age' => $request->member_age ?? null,
-                'member_weight' => $request->member_weight ?? null,
-                'member_weight_unit' => $request->member_weight_unit ?? null,
-                'member_height_ft' => $request->member_height_ft ?? null,
-                'member_height_in' => $request->member_height_in ?? null,
-                'member_goal' => $request->member_goal ?? null,
-                'member_exp' => $request->member_exp ?? null,
-                'member_profile'=>$imageName,
-                'member_excerise_place' => $request->member_excerise_place ?? null,
-                'member_status' => 'pending',
+            'member_full_name' => $validatedData['member_full_name'],
+            'member_email' => $validatedData['member_email'],
+            'member_password' => Hash::make($validatedData['member_password']),
+            'member_profile' => $imageName,
+            'member_gender' => $request->json('member_gender'),
+            'member_age' => $request->json('member_age'),
+            'member_weight' => $request->json('member_weight'),
+            'member_weight_unit' => $request->json('member_weight_unit'),
+            'member_height_ft' => $request->json('member_height_ft'),
+            'member_height_in' => $request->json('member_height_in'),
+            'member_goal' => $request->json('member_goal'),
+            'member_exp' => $request->json('member_exp'),
+            'member_excerise_place' => $request->json('member_excerise_place'),
+            'member_status' => 'pending',
             ]);
          
             $token = $member->createToken('member_token')->plainTextToken;
             return response()->json([
-                'message' => 'Signup successful',
-                'token' => $token,
-                'user' => $member
+            'message' => 'Signup successful',
+            'token' => $token,
+            'user' => $member
             ], 201); 
-    
+        
         } catch (ValidationException $e) {
             return response()->json([
-                'message' => 'Validation failed',
-                'errors' => $e->errors(),
+            'message' => 'Validation failed',
+            'errors' => $e->errors(),
             ], 422); 
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Something went wrong',
-                'error' => $e->getMessage(),
+            'message' => 'Something went wrong',
+            'error' => $e->getMessage(),
             ], 500); 
         }
     }
@@ -64,15 +65,14 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-    
-        $user = Members::where('member_email', $request->email)->first();
-    
-        if (!$user || !Hash::check($request->password, $user->member_password)) {
+        
+        $user = Members::where('member_email', $request->json('email'))->first();
+        
+        if (!$user || !Hash::check($request->json('password'), $user->member_password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
-    
+        
         $token = $user->createToken('member_token')->plainTextToken;
-    
         return response()->json([
             'message' => 'Login successful',
             'token' => $token,
