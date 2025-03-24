@@ -44,20 +44,20 @@ class AuthController extends Controller
          
             $token = $member->createToken('member_token')->plainTextToken;
             return response()->json([
-            'message' => 'Signup successful',
-            'token' => $token,
-            'user' => $member
+                'message' => 'Signup successful',
+                'token' => $token,
+                'user' => $member
             ], 201); 
         
     } catch (ValidationException $e) {
             return response()->json([
-            'message' => 'Validation failed',
-            'errors' => $e->errors(),
+                'message' => 'Validation failed',
+                'errors' => $e->errors(),
             ], 422); 
     } catch (\Exception $e) {
             return response()->json([
-            'message' => 'Something went wrong',
-            'error' => $e->getMessage(),
+                'message' => 'Something went wrong',
+                'error' => $e->getMessage(),
             ], 500); 
         }
     }
