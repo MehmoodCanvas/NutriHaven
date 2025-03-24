@@ -12,7 +12,7 @@
   </div>
 
   <section>
-  <a  class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add New Media</a>
+  <a  class="btn btn-success" >Add New Media</a>
   @if(session()->has('success'))
   <div class="alert alert-success">
       {{ session()->get('success') }}

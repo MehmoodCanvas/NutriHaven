@@ -29,7 +29,6 @@
   <link href="{{asset('assets/admin/css/style.css')}}" rel="stylesheet">
   <link href="{{asset('assets/admin/css/tags.css')}}" rel="stylesheet">
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-  @cloudinaryJS
 </head>
 
 <body>
@@ -246,7 +245,12 @@
         </ul>
       </li><!-- End Charts Nav --> --}}
 
-    
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{url('admin/categories')}}">
+          <i class="bi bi-tag"></i>
+          <span>All Categories</span>
+        </a>
+      </li>
       <li class="nav-item">
         <a class="nav-link collapsed" href="{{url('admin/videos')}}">
           <i class="bi bi-camera-video"></i>

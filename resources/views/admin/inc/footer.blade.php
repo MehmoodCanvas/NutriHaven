@@ -1,10 +1,13 @@
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+
+
+<div class="modal fade" id="categoryexampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
    
       <div class="modal-body">
-        <form  action="{{url('admin/post-gallery/')}}" method='post' enctype="multipart/form-data" >
+        <form  action="{{url('admin/post-category/')}}" method='post' enctype="multipart/form-data" >
           @csrf
         
           <section class="section">
@@ -13,18 +16,23 @@
       
                 <div class="card">
                   <div class="card-body">
-                    <h5 class="card-title">Gallery</h5>
-         
+                    <h5 class="card-title">New Category</h5>
       
                         <div id='slideupload' class="row mb-3">
-                          <label for="inputText" class="col-sm-12 col-form-label">Media Content</label>
-                          <div class="col-sm-12">
-                            <div class="input-images"></div>
-                          </div>
-                        </div>
-      
                         
-                     
+                          <label for="inputText" class="col-sm-12 col-form-label">Title</label>
+                          <div class="col-sm-12">
+                           <input type="text" class="form-control" name="category_name" id="category_name">  
+                          </div>
+                          <label for="inputText" class="col-sm-12 col-form-label">Description</label>
+                          <div class="col-sm-12">
+                           <input type="text" class="form-control" name="category_description" id="category_description">  
+                          </div>
+                            
+                        <label for="inputText" class="col-sm-12 col-form-label">Image</label>
+                        <div class="col-sm-12">
+                         <input type="file" class="form-control" name="file" id="file">  
+                        </div>         
                         <div class="row mb-3">
                           <div class="col-sm-10">
                               <input type="submit" value="Update Gallery" class='btn btn-success'>
@@ -40,8 +48,6 @@
     </div>
   </div>
 </div>
-
-
 
 
 
@@ -70,24 +76,6 @@
   <!-- Template Main JS File -->
   <script src="{{asset('assets/admin/js/main.js')}}"></script>
   <script src="{{asset('assets/admin/vendor/multi/image-uploader.min.js')}}"></script>
-  <script src="{{asset('assets/front/js/lazy.js')}}"></script>
-  <script src="{{asset('assets/admin/js/tags.js')}}"></script>
-  <script>
-     const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
-      .then(FingerprintJS => FingerprintJS.load())
-      fpPromise
-      .then(fp => fp.get())
-      .then(result => {
-        const visitorId = result.visitorId
-        const socket = io("http://127.0.0.1:3000", {
-            withCredentials: false,
-            auth: { deviceId: visitorId }  
-        });
-        socket.on('total_count',(event) =>{
-              document.getElementById('total_vist_counter').innerHTML = event;
-
-         });
-    })
 
 
 
@@ -112,12 +100,10 @@
   selector: 'textarea#default-editor'
 });
 
-$("#tagsinput").tagsinput('items')	
 
   </script>
   <script>
         $('.input-images').imageUploader();
-        $('.input-images2').imageUploader2();
 
    </script>
 <script>
