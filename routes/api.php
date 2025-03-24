@@ -10,9 +10,9 @@ use App\Http\Controllers\Api\DataController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:member')->group(function () {
     Route::get('/videos', [DataController::class, 'workout_videos']);
     Route::get('/exercises/{id}', [ExerciseController::class, 'show']);
     Route::post('/logout', [AuthController::class, 'logout']);
-
 });
+
