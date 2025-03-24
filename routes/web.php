@@ -33,7 +33,7 @@ Route::get('/admin',function(){
 
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/dashboard', [Dashboard::class, 'index']);
-    Route::get('/homepage', [Dashboard::class, 'homepage']);
+    Route::get('/videos', [Dashboard::class, 'videos']);
     Route::get('/about', [Dashboard::class, 'about']);
     Route::get('/order', [Dashboard::class, 'order']);
     Route::get('/products', [Dashboard::class, 'products']);

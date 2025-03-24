@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Product;
+use App\Models\Workout_videos;
 use App\Models\Category;
 use App\Models\Sub_category;
 use App\Models\Attribute;
@@ -20,10 +20,10 @@ class Dashboard extends Controller
         return view('admin.index');
     }
 
-    public function workout_videos()
+    public function videos()
     {
-            $product = Product::all();
-            return view('admin.product', compact('product'));
+            $videos = Workout_videos::all();
+            return view('admin.videos', compact('videos'));
         
     }
 

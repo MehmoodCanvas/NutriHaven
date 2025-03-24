@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Dashboard - Walex</title>
+  <title>Dashboard - NutriHeaven</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -29,7 +29,7 @@
   <link href="{{asset('assets/admin/css/style.css')}}" rel="stylesheet">
   <link href="{{asset('assets/admin/css/tags.css')}}" rel="stylesheet">
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-
+  @cloudinaryJS
 </head>
 
 <body>
@@ -39,7 +39,7 @@
 
     <div class="d-flex align-items-center justify-content-between">
       <a href="{{url('admin/dashboard')}}" class="logo d-flex align-items-center">
-        <span class="d-none d-lg-block">Walex Admin Panel</span>
+        <span class="d-none d-lg-block">NutriHeaven Admin Panel</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -127,7 +127,7 @@
           <span>Dashboard</span>
         </a>
       </li><!-- End Dashboard Nav -->
-      <li class="nav-item">
+      {{-- <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-journal-text"></i><span>Page Management</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
@@ -229,10 +229,10 @@
             </a>
           </li>
         </ul>
-      </li>
+      </li> --}}
       
       <!-- End Components Nav -->
-      <li class="nav-item">
+      {{-- <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-bar-chart"></i><span>Order Managment</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
@@ -244,22 +244,16 @@
           </li>
           
         </ul>
-      </li><!-- End Charts Nav -->
+      </li><!-- End Charts Nav --> --}}
 
     
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{{url('admin/subscribers')}}">
-          <i class="bi bi-person"></i>
-          <span>All Subscribers</span>
+        <a class="nav-link collapsed" href="{{url('admin/videos')}}">
+          <i class="bi bi-camera-video"></i>
+          <span>All Videos</span>
         </a>
       </li>
-     
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{{url('admin/gift')}}">
-          <i class="bi bi-gift"></i>
-          <span>All Gifts</span>
-        </a>
-      </li>
+
       <li class="nav-heading">General Setting</li>
       <li class="nav-item">
         <a class="nav-link collapsed" href="{{url('admin/global-setting')}}">

@@ -32,7 +32,7 @@
                       <i class="bi bi-cart"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>{{count($orders)}}</h6>
+                      <h6>{{1}}</h6>
                       <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
 
                     </div>
@@ -55,7 +55,7 @@
                       <i class="bi bi-currency-dollar"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>${{$total}}</h6>
+                      <h6>$1</h6>
                       <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>
 
                     </div>
@@ -98,7 +98,7 @@
 
                   <!-- Line Chart -->
                   <div id="reportsChart"></div>
-                  <script>
+                  {{-- <script>
                     document.addEventListener("DOMContentLoaded", () => {
                       new ApexCharts(document.querySelector("#reportsChart"), {
                         series: [{
@@ -140,7 +140,7 @@
                         }
                       }).render();
                     });
-                  </script>
+                  </script> --}}
                   <!-- End Line Chart -->
                   
                 </div>
@@ -155,43 +155,7 @@
                   <h5 class="card-title">Reports <span></span></h5>
 
                   <!-- Line Chart -->
-                  <div id="ca"></div>
-                  <script>
-             document.addEventListener("DOMContentLoaded", () => {
-                    var chartData = @json($analysis);
-
-                    var seriesData = chartData.map(item => item.count);
-                    var labelsData = chartData.map(item => item.browser);
-
-                    var options = {
-                        series: seriesData,
-                        chart: {
-                            type: 'polarArea'
-                        },
-                        labels: labelsData,
-                        stroke: {
-                            colors: ['#fff']
-                        },
-                        fill: {
-                            opacity: 0.8
-                        },
-                        responsive: [{
-                            breakpoint: 480,
-                            options: {
-                                chart: {x
-                                    height: 350,
-                                },
-                                legend: {
-                                    position: 'bottom'
-                                }
-                            }
-                        }]
-                    };
-
-              var chart = new ApexCharts(document.querySelector("#ca"), options);
-              chart.render();
-        });
-                  </script>
+                
                   <!-- End Line Chart -->
                   
                 </div>
