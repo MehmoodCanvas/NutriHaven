@@ -13,6 +13,10 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:member')->group(function () {
     Route::get('/exercises/{id}', [ExerciseController::class, 'show']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/user', function (Request $request) {
+        return response()->json(['user' => $request->user()]);
+    });
 });
 
 Route::get('/videos', [DataController::class, 'workout_videos']);
+Route::get('/category', [DataController::class, 'category']);
