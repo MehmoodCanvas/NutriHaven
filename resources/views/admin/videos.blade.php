@@ -55,7 +55,6 @@
       <div class="modal-body">
         <form  action="{{url('admin/post-video/')}}" method='post' enctype="multipart/form-data" >
           @csrf
-        
           <section class="section">
             <div class="row">
               <div class="col-lg-12">
