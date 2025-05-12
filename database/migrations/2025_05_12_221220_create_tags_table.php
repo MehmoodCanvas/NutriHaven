@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_workout', function (Blueprint $table) {
-            $table->id('user_workout_id');
-            $table->foreignId('user_workout_member_id')->references('member_id')->on('member')->onDelete('cascade');
-            $table->string('user_workout_total_time');
+        Schema::create('tag', function (Blueprint $table) {
+            $table->id('tag_id');
+            $table->foreignId('tag_nutriheaven_excerise_id')->references('nutrihaven_exercise_id')->on('nutrihaven_exercise')->onDelete('cascade');
+            $table->string('tag_name'); 
+            $table->string('tag_description'); 
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_workout');
+        Schema::dropIfExists('tag');
     }
 };

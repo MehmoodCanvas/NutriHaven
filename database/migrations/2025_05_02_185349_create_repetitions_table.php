@@ -16,10 +16,7 @@ return new class extends Migration
             $table->foreignId('repetition_excerise_id')->references('excerise_id')->on('excerise')->onDelete('cascade');
             $table->foreignId('repetition_user_workout_id')->references('user_workout_id')->on('user_workout')->onDelete('cascade');
             $table->integer('repetition_time');
-            $table->boolen('repetition_completed',[
-                '0' => 'false',
-                '1' => 'true'
-            ]);
+            $table->boolean('repetition_completed')->default(false);
 
             $table->timestamps();
         });
