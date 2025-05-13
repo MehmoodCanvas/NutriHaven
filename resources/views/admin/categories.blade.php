@@ -13,7 +13,7 @@
     </div>
 
     <section>
-    <a  class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#categoryexampleModal" href="{{url('/admin/add-new-category')}}">Add New Category</a>
+    <a  class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#categoryexampleModal">Add New Category</a>
       <table class="table datatable">
         <thead>
             <th>S.No</th>

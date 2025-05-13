@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Workout_videos;
 use App\Models\Category;
+use App\Models\Muscle;
+
 
 
 class DataController extends Controller
@@ -18,7 +20,7 @@ class DataController extends Controller
                 ->get();
                 return response()->json([
                     'status' => 'success',
-                    'videos' => $videos,
+                    'data' => $videos,
                 ], 200);
         }
        
@@ -35,7 +37,24 @@ class DataController extends Controller
         $category = Category::all();
         return response()->json([
             'status' => 'success',
-            'category' => $category,
+            'data' => $category,
         ], 200);
     }
+
+
+    public function muscle(){
+        $muscle = Muscle::all();
+        if($muscle->isEmpty()){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No muscle data found',
+            ], 204);
+        } else {
+            return response()->json([
+                'status' => 'success',
+                'data' => $muscle,
+            ], 200);
+        }
+    }
+
 }

@@ -13,17 +13,20 @@
     </div>
 
     <section >
+
+          <a  class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#exerciseexampleModal">Add New Excerise</a>
+
       <table class="table datatable">
         <thead>
             <th>S.No</th>
-            <th>Subscibers Email</th>
+            <th>Exercise Name</th>
             <th>Action</th>
         </thead>
         <tbody>
-            @foreach($subscribers as $email)
+            @foreach($exercises as $exercise)
           <tr>
-            <td>{{$email->newsletter_id}}</td>
-            <td>{{$email->newsletter_email}}</td>
+            <td>{{$loop->iteration}}</td>
+            <td>{{$exercise->nutrihaven_exercise_name}}</td>
             <td><button class="btn btn-secondary"><i class="bi bi-pencil-square"></i></button><button class="btn btn-danger"><i class="bi bi-archive"></i></button></td>
           </tr>
           @endforeach
