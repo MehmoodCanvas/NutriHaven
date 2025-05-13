@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('nutrihaven_exercise', function (Blueprint $table) {
             $table->id('nutrihaven_exercise_id');
-            $table->foreignId('nutrihaven_excerise_muscle_id')->references('exercise_muscle_id')->on('exercise_muscle')->onDelete('cascade');
+            $table->foreignId('nutrihaven_excerise_ muscle_id')->references('exercise_muscle_id')->on('exercise_muscle')->onDelete('cascade');
             $table->foreignId('nutrihaven_excerise_routine_id')->references('workout_routine_id')->on('workout_routine')->onDelete('cascade');
             $table->string('nutrihaven_exercise_name');
             $table->longText('nutrihaven_exercise_instructions');

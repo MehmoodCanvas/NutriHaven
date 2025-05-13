@@ -21,7 +21,6 @@ Route::get('/logout',function(){
 });
 
 
-//AMDIN POST END 
 Route::get('/admin/login',function(){
     return view('admin.login');
 })->name('admin/login');
@@ -35,8 +34,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/dashboard', [Dashboard::class, 'index']);
     Route::get('/videos', [Dashboard::class, 'videos']);
     Route::get('/categories', [Dashboard::class, 'categories']);
-    Route::get('/order', [Dashboard::class, 'order']);
-    Route::get('/products', [Dashboard::class, 'products']);
+    Route::get('/exercise', [Dashboard::class, 'exercise']);
     Route::get('/add-product', [Dashboard::class, 'add_product']);
     Route::get('/category', [Dashboard::class, 'category']);
     Route::get('/sub-category', [Dashboard::class, 'sub_category']);
@@ -47,6 +45,6 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     //POST METHOD
     Route::post('post-video',[UniversalProcessController::class,'add_workout_video']);
     Route::post('post-category/',[UniversalProcessController::class,'store_category']);
+    //AMDIN POST END 
 
-    
 });

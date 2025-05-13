@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('excerise', function (Blueprint $table) {
-            $table->id('excerise_id');
-            $table->integer('excerise_nutrihaven_excerise_id');
-            $table->integer('excerise_workout_excerise_id');
-            $table->integer('excerise_repetitions');
+        Schema::create('exercise', function (Blueprint $table) {
+            $table->id('exercise_id');
+            $table->integer('exercise_nutrihaven_exercise_id');
+            $table->integer('exercise_workout_exercise_id');
+            $table->integer('exercise_repetitions');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('excerise');
+        Schema::dropIfExists('exercise');
     }
 };

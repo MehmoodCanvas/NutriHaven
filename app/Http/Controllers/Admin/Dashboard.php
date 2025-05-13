@@ -5,13 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Workout_videos;
 use App\Models\Category;
-use App\Models\Sub_category;
-use App\Models\Attribute;
-use App\Models\Variant;
-use App\Models\Brands;
-use Illuminate\Support\Facades\DB;
+use App\Models\Exercise;
+
 
 class Dashboard extends Controller
 {
@@ -35,5 +33,11 @@ class Dashboard extends Controller
       
     }
 
+    public function exercise(){
+
+        $exercise = Exercise::orderBy('exercise','DESC')->get();
+        return view('admin.exercise', compact('exercise'));
+
+    }
 
 }

@@ -126,124 +126,23 @@
           <span>Dashboard</span>
         </a>
       </li><!-- End Dashboard Nav -->
-      {{-- <li class="nav-item">
+      <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-journal-text"></i><span>Page Management</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="{{url('admin/homepage')}}">
-              <i class="bi bi-circle"></i><span>HomePage</span>
-            </a>
+        <a href="{{url('admin/exercise')}}">
+          <i class="bi bi-circle"></i><span>Exercise</span>
+        </a>
+        <a href="{{url('admin/muscle')}}">
+          <i class="bi bi-circle"></i><span>Muscle</span>
+        </a>
           </li>
-         
-         
         </ul>
       </li><!-- End Forms Nav -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-menu-button-wide"></i><span>Product Management</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="{{url('admin/products')}}">
-              <i class="bi bi-circle"></i><span>Products</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{url('admin/add-product')}}">
-              <i class="bi bi-circle"></i><span>Add New Product</span>
-            </a>
-          </li>
-          
-        </ul>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#components-nav2" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-bookmark-heart-fill"></i><span>Category Management</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="components-nav2" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="{{url('admin/category')}}">
-              <i class="bi bi-circle"></i><span>Category</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{url('admin/sub-category')}}">
-              <i class="bi bi-circle"></i><span>Sub Category</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{url('admin/add-new-category')}}">
-              <i class="bi bi-circle"></i><span>Add New Category</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{url('admin/add-new-sub-category')}}">
-              <i class="bi bi-circle"></i><span>Add New Sub Category</span>
-            </a>
-          </li>
-        </ul>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#components-nav23" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-tag"></i><span>Brands Management</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="components-nav23" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="{{url('admin/brands')}}">
-              <i class="bi bi-circle"></i><span>All Brands</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{url('admin/add-new-brand')}}">
-              <i class="bi bi-circle"></i><span>Add New Brand</span>
-            </a>
-          </li>
-        </ul>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#components-var" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-menu-button-fill"></i><span>Variant Management</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="components-var" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="{{url('admin/attribute')}}">
-              <i class="bi bi-circle"></i><span>Attribute</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{url('admin/add-attribute')}}">
-              <i class="bi bi-circle"></i><span>Add New Attribute</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{url('admin/variant')}}">
-              <i class="bi bi-circle"></i><span>Variants</span>
-            </a>
-          </li>
-          <li>
-            <a href="{{url('admin/add-variant')}}">
-              <i class="bi bi-circle"></i><span>Add New Variant</span>
-            </a>
-          </li>
-        </ul>
-      </li> --}}
-      
-      <!-- End Components Nav -->
-      {{-- <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-bar-chart"></i><span>Order Managment</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="{{url('admin/orders')}}">
-              <i class="bi bi-circle"></i><span>All Order</span>
-            </a>
-          </li>
-          
-        </ul>
-      </li><!-- End Charts Nav --> --}}
+  
+  
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="{{url('admin/categories')}}">
@@ -256,7 +155,7 @@
           <i class="bi bi-camera-video"></i>
           <span>All Videos</span>
         </a>
-      </li>
+      </li>   
 
       <li class="nav-heading">General Setting</li>
       <li class="nav-item">
