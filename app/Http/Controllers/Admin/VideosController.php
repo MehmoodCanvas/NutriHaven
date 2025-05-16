@@ -8,7 +8,7 @@ use App\Models\Workout_videos;
 use App\Models\Category;
 
 
-class UniversalProcessController extends Controller
+class VideosController extends Controller
 {
     public function add_workout_video(Request $request)
     {

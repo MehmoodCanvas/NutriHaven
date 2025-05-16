@@ -20,6 +20,7 @@
         <thead>
             <th>S.No</th>
             <th>Exercise Name</th>
+            <th>Exercise Video</th>
             <th>Action</th>
         </thead>
         <tbody>
@@ -27,6 +28,7 @@
           <tr>
             <td>{{$loop->iteration}}</td>
             <td>{{$exercise->nutrihaven_exercise_name}}</td>
+            <td><video src="{{$exercise->nutrihaven_exercise_video_url}}" controls"></video></td>
             <td><button class="btn btn-secondary"><i class="bi bi-pencil-square"></i></button><button class="btn btn-danger"><i class="bi bi-archive"></i></button></td>
           </tr>
           @endforeach

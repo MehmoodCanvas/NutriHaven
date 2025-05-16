@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Workout_videos;
 use App\Models\Category;
-use App\Models\Nutrihaven_excerise;
+use App\Models\Nutrihaven_Exercise;
+use App\Models\Muscle;
 
 
 class Dashboard extends Controller
@@ -35,9 +36,14 @@ class Dashboard extends Controller
 
     public function exercise(){
 
-        $exercises = Nutrihaven_excerise::orderBy('nutrihaven_exercise_id','DESC')->get();
+        $exercises = Nutrihaven_Exercise::orderBy('nutrihaven_exercise_id','DESC')->get();
         return view('admin.exercise', compact('exercises'));
 
+    }
+
+    public function muscle(){
+        $muscles = Muscle::orderBy('muscle_id','DESC')->get();
+        return view('admin.muscle', compact('muscles'));
     }
 
 }

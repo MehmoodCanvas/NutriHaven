@@ -28,7 +28,7 @@
           <tr>
             <td>{{$loop->iteration}}</td>
             <td>{{$video->workout_videos_title}}</td>
-            <td>${{$video->workout_videos_description}}</td>
+            <td>{{$video->workout_videos_description}}</td>
             <td> <video src="{{ $video->workout_videos_cdn_url }}"></video> </td>
            
             <td>{{$video->category_name}}</td>

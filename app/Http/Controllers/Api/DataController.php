@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Workout_videos;
 use App\Models\Category;
 use App\Models\Muscle;
+use App\Models\Nutriheaven_exercise;
 
 
 
@@ -53,6 +54,20 @@ class DataController extends Controller
             return response()->json([
                 'status' => 'success',
                 'data' => $muscle,
+            ], 200);
+        }
+    }
+     public function nutriheaven_exercise(){
+        $exercise = Nutriheaven_exercise::all();
+        if($exercise->isEmpty()){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No exercise data found',
+            ], 204);
+        } else {
+            return response()->json([
+                'status' => 'success',
+                'data' => $exercise,
             ], 200);
         }
     }

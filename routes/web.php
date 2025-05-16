@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Login;
 use App\Http\Controllers\Admin\Dashboard;
-use App\Http\Controllers\Admin\UniversalProcessController;
+use App\Http\Controllers\Admin\VideosController;
+use App\Http\Controllers\Admin\Exercise;
+use App\Http\Controllers\Admin\MuscleController;
 
 
 
@@ -19,7 +21,12 @@ Route::get('/logout',function(){
     session()->flush();
     return redirect('/');
 });
-
+Route::get('/', function(){
+    return redirect('admin/login');
+});
+Route::get('/login', function(){
+    return redirect('admin/login');
+})->name('login');
 
 Route::get('/admin/login',function(){
     return view('admin.login');
@@ -35,16 +42,15 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/videos', [Dashboard::class, 'videos']);
     Route::get('/categories', [Dashboard::class, 'categories']);
     Route::get('/exercise', [Dashboard::class, 'exercise']);
-    Route::get('/add-product', [Dashboard::class, 'add_product']);
+    Route::get('/muscle', [Dashboard::class, 'muscle']);
     Route::get('/category', [Dashboard::class, 'category']);
-    Route::get('/sub-category', [Dashboard::class, 'sub_category']);
-    Route::get('/add-new-category', [Dashboard::class, 'add_new_category']);
-    Route::get('/add-new-sub-category', [Dashboard::class, 'add_new_sub_category']);
 
     
     //POST METHOD
-    Route::post('post-video',[UniversalProcessController::class,'add_workout_video']);
-    Route::post('post-category/',[UniversalProcessController::class,'store_category']);
+    Route::post('post-video',[VideosController::class,'add_workout_video']);
+    Route::post('post-category/',[VideosController::class,'store_category']);
+    Route::post('post-exercise/',[Exercise::class,'store_exercise'])->name('post-exercise');
+    Route::post('post-muscle/',[MuscleController::class,'store_muscle'])->name('post-muscle');
     //AMDIN POST END 
 
 });
