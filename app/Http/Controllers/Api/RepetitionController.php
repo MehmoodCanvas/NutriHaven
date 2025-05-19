@@ -14,8 +14,6 @@ class RepetitionController extends Controller
             'repetition_user_workout_id' => 'required|integer',
             'repetition_time' => 'required',
             'repetition_completed' => 'nullable',
-
-
         ]);
 
         if ($validation->fails()) {
