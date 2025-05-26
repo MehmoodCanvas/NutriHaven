@@ -26,6 +26,6 @@ class RepetitionController extends Controller
         $repetition->repetition_time = $request->input('repetition_time');
         $repetition->repetition_completed = $request->input('repetition_completed');
         $repetition->save();
-        return response()->json(['message' => 'Repetition added successfully'], 201);
+        return response()->json(['status'=>'success', 'message' => 'Repetition added successfully'], 201);
     }
 }
