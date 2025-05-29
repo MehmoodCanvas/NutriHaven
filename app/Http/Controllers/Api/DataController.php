@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Workout_videos;
 use App\Models\Category;
 use App\Models\Muscle;
-use App\Models\Nutriheaven_exercise;
+use App\Models\Nutrihaven_Exercise;
 
 
 
@@ -58,7 +58,7 @@ class DataController extends Controller
         }
     }
      public function nutriheaven_exercise(){
-        $exercise = Nutriheaven_exercise::all();
+        $exercise = Nutrihaven_Exercise::all();
         if($exercise->isEmpty()){
             return response()->json([
                 'status' => 'error',
