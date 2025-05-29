@@ -12,10 +12,6 @@ use App\Http\Controllers\Admin\MuscleController;
 
 
 
-
-
-
-
 Route::post('/auth',[Login::class,'authenticate']);
 Route::get('/logout',function(){
     session()->flush();
