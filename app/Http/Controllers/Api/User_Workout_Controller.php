@@ -9,7 +9,6 @@ class User_Workout_Controller extends Controller
 {
     public function store_user_workout(Request $request){
         $validation = \Validator::make($request->all(), [
-            'user_workout_member_id' => 'required|integer',
             'user_workout_total_time' => 'required',
         ]);
         if ($validation->fails()) {
