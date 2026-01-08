@@ -5,8 +5,20 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Excercise;
-class Exercise_Controller extends Controller
+
+class ExerciseController extends Controller
 {
+    public function show($id)
+    {
+        $exercise = Excercise::find($id);
+
+        if (!$exercise) {
+            return response()->json(['status' => 'error', 'message' => 'Exercise not found'], 404);
+        }
+
+        return response()->json(['status' => 'success', 'data' => $exercise], 200);
+    }
+
     public function store_exercise(Request $request)
     {
         $validation = \Validator::make($request->all(), [
