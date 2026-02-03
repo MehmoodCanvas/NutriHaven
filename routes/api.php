@@ -11,8 +11,17 @@ use App\Http\Controllers\Api\ExerciseController;
 use App\Http\Controllers\Api\User_Workout_Controller;
 use App\Http\Controllers\Api\Tag;
 use App\Http\Controllers\Api\MasterExerciseController;
+use App\Http\Controllers\Api\ExerciseGroupController;
+use App\Http\Controllers\Api\ExerciseLogController;
 
 
+
+Route::fallback(function(){
+    return response()->json([
+        'status' => false,
+        'message' => 'API route not found.',
+    ], 404);
+});
 
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -43,6 +52,22 @@ Route::middleware('auth:sanctum')->group(
         // Master Data Routes
         Route::get('/master-exercise', [MasterExerciseController::class, 'index']);
         Route::get('/muscle-group', [MasterExerciseController::class, 'muscleGroups']);
+
+        // Exercise Group & Logs
+        Route::prefix('exercise-groups')->group(function () {
+            Route::get('/list', [ExerciseGroupController::class, 'index']);
+            Route::post('/create', [ExerciseGroupController::class, 'store']);
+            Route::get('/{id}', [ExerciseGroupController::class, 'show']);
+            Route::post('/update/{id}', [ExerciseGroupController::class, 'update']);
+            Route::post('/delete/{id}', [ExerciseGroupController::class, 'destroy']);
+            Route::post('/remove-exercise/{id}', [ExerciseGroupController::class, 'removeExercise']);
+        });
+        
+        Route::prefix('exercise-logs')->group(function () {
+            Route::get('/', [ExerciseLogController::class, 'index']);
+            Route::post('/start', [ExerciseLogController::class, 'start']);
+            Route::post('/end', [ExerciseLogController::class, 'end']);
+        });
     }
 );
 
