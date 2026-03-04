@@ -61,6 +61,8 @@ Route::middleware('auth:sanctum')->group(
             Route::post('/update/{id}', [ExerciseGroupController::class, 'update']);
             Route::post('/delete/{id}', [ExerciseGroupController::class, 'destroy']);
             Route::post('/remove-exercise/{id}', [ExerciseGroupController::class, 'removeExercise']);
+            Route::post('/toggle-save/{id}', [ExerciseGroupController::class, 'toggleSave']);
+            Route::post('/duplicate/{id}', [ExerciseGroupController::class, 'duplicate']);
         });
         
         Route::prefix('exercise-logs')->group(function () {

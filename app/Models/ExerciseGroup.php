@@ -9,10 +9,11 @@ class ExerciseGroup extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['member_id', 'title', 'is_active'];
+    protected $fillable = ['member_id', 'title', 'is_active', 'is_saved'];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_saved' => 'boolean',
     ];
 
     public function member()

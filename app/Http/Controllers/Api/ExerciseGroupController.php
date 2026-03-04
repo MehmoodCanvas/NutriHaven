@@ -32,6 +32,11 @@ class ExerciseGroupController extends Controller
                 $query->where('is_active', filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN));
             }
 
+            // Filter by saved status
+            if ($request->has('is_saved')) {
+                $query->where('is_saved', filter_var($request->is_saved, FILTER_VALIDATE_BOOLEAN));
+            }
+
             // Sorting
             if ($request->has('sort')) {
                 switch ($request->sort) {
@@ -251,6 +256,13 @@ class ExerciseGroupController extends Controller
                 return response()->json(['status' => false, 'message' => 'Unauthorized delete to this group'], 403);
             }
 
+            if ($group->is_saved) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Cannot delete a saved group. Please unsave it first.'
+                ], 422);
+            }
+
             $group->delete();
 
             return response()->json([
@@ -314,6 +326,82 @@ class ExerciseGroupController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'An error occurred while removing the exercise',
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function toggleSave(Request $request, $id)
+    {
+        try {
+            $group = ExerciseGroup::find($id);
+
+            if (!$group) {
+                return response()->json(['status' => false, 'message' => 'Exercise group not found'], 404);
+            }
+
+            if ($group->member_id !== Auth::user()->member_id) {
+                return response()->json(['status' => false, 'message' => 'Unauthorized action'], 403);
+            }
+
+            $group->is_saved = !$group->is_saved;
+            $group->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => $group->is_saved ? 'Exercise group saved successfully' : 'Exercise group unsaved successfully',
+                'data' => $group
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while toggling saved status',
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function duplicate(Request $request, $id)
+    {
+        try {
+            $originalGroup = ExerciseGroup::with('groupExercises')->find($id);
+
+            if (!$originalGroup) {
+                return response()->json(['status' => false, 'message' => 'Exercise group not found'], 404);
+            }
+
+            if ($originalGroup->member_id !== Auth::user()->member_id) {
+                return response()->json(['status' => false, 'message' => 'Unauthorized action'], 403);
+            }
+
+            DB::beginTransaction();
+
+            // Create new group with modified title
+            $newGroup = $originalGroup->replicate(['is_saved']); // Don't replicate saved status
+            $newGroup->title = $originalGroup->title . ' (Duplicate)';
+            $newGroup->save();
+
+            // Duplicate exercises
+            foreach ($originalGroup->groupExercises as $exercise) {
+                $newExercise = $exercise->replicate();
+                $newExercise->group_id = $newGroup->id;
+                $newExercise->save();
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Exercise group duplicated successfully',
+                'data' => $newGroup->load('groupExercises.masterExercise')
+            ], 201);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while duplicating the exercise group',
                 'error' => $th->getMessage()
             ], 500);
         }

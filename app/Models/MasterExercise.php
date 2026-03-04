@@ -11,6 +11,10 @@ class MasterExercise extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'difficulty' => 'string',
+    ];
+
     public function muscleGroup()
     {
         return $this->belongsTo(MuscleGroup::class);
@@ -23,6 +27,6 @@ class MasterExercise extends Model
 
     public function auxEquipment()
     {
-        return $this->belongsTo(Equipment::class, 'aux_equipment_id');
+        return $this->belongsTo(AuxEquipment::class, 'aux_equipment_id');
     }
 }
