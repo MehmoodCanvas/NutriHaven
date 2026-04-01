@@ -14,7 +14,18 @@ class MasterExerciseController extends Controller
         $query = MasterExercise::with(['muscleGroup', 'equipmentRequired', 'auxEquipment']);
 
         if ($request->has('muscle_group_id')) {
-            $query->where('muscle_group_id', $request->muscle_group_id);
+            $muscleGroupIds = $request->muscle_group_id;
+            
+            // If it's a comma-separated string, convert it to an array
+            if (is_string($muscleGroupIds) && str_contains($muscleGroupIds, ',')) {
+                $muscleGroupIds = explode(',', $muscleGroupIds);
+            }
+            
+            if (is_array($muscleGroupIds)) {
+                $query->whereIn('muscle_group_id', $muscleGroupIds);
+            } else {
+                $query->where('muscle_group_id', $muscleGroupIds);
+            }
         }
 
         if ($request->has('goal')) {
@@ -29,7 +40,8 @@ class MasterExerciseController extends Controller
             $query->where('difficulty', $request->difficulty);
         }
 
-        $exercises = $query->paginate(10);
+        $perPage = $request->get('per_page', 20);
+        $exercises = $query->paginate($perPage);
 
         return response()->json([
             'status' => true,
@@ -38,9 +50,10 @@ class MasterExerciseController extends Controller
         ]);
     }
 
-    public function muscleGroups()
+    public function muscleGroups(Request $request)
     {
-        $muscleGroups = MuscleGroup::paginate(10);
+        $perPage = $request->get('per_page', 20);
+        $muscleGroups = MuscleGroup::paginate($perPage);
 
         return response()->json([
             'status' => true,

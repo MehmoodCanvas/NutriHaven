@@ -30,7 +30,8 @@ class WorkoutLogController extends Controller
                 $query->where('workout_plan_id', $request->workout_plan_id);
             }
 
-            $logs = $query->orderBy('log_date', 'desc')->orderBy('start_time', 'desc')->paginate(20);
+            $perPage = $request->get('per_page', 20);
+            $logs = $query->orderBy('log_date', 'desc')->orderBy('start_time', 'desc')->paginate($perPage);
 
             return response()->json([
                 'status' => true,

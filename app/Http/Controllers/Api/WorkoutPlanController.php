@@ -50,7 +50,8 @@ class WorkoutPlanController extends Controller
                 $query->latest();
             }
 
-            $plans = $query->paginate(20);
+            $perPage = $request->get('per_page', 20);
+            $plans = $query->paginate($perPage);
 
             return response()->json([
                 'status' => true,
