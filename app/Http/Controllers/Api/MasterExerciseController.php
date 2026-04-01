@@ -17,6 +17,18 @@ class MasterExerciseController extends Controller
             $query->where('muscle_group_id', $request->muscle_group_id);
         }
 
+        if ($request->has('goal')) {
+            $query->whereJsonContains('goals', $request->goal);
+        }
+
+        if ($request->has('duration_minutes')) {
+            $query->where('duration_minutes', $request->duration_minutes);
+        }
+
+        if ($request->has('difficulty')) {
+            $query->where('difficulty', $request->difficulty);
+        }
+
         $exercises = $query->paginate(10);
 
         return response()->json([

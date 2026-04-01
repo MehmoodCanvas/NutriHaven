@@ -13,6 +13,8 @@ class MasterExercise extends Model
 
     protected $casts = [
         'difficulty' => 'string',
+        'goals' => 'array',
+        'default_sets' => 'array',
     ];
 
     public function muscleGroup()

@@ -11,10 +11,8 @@ use App\Http\Controllers\Api\ExerciseController;
 use App\Http\Controllers\Api\User_Workout_Controller;
 use App\Http\Controllers\Api\Tag;
 use App\Http\Controllers\Api\MasterExerciseController;
-use App\Http\Controllers\Api\ExerciseGroupController;
-use App\Http\Controllers\Api\ExerciseLogController;
-
-
+use App\Http\Controllers\Api\WorkoutPlanController;
+use App\Http\Controllers\Api\WorkoutLogController;
 
 Route::fallback(function(){
     return response()->json([
@@ -22,7 +20,6 @@ Route::fallback(function(){
         'message' => 'API route not found.',
     ], 404);
 });
-
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -41,7 +38,6 @@ Route::middleware('auth:sanctum')->group(
         Route::get('/muscle', [DataController::class, 'muscle']);
         Route::get('/nutriheaven-exercise', [DataController::class, 'nutriheaven_exercise']);
 
-
         Route::post('/post-workout-routine', [Workout_Routine_Controller::class, 'store_routine']);
         Route::post('/post-repetition', [RepetitionController::class, 'store_repetition']);
         Route::post('/post-exercise-muscle', [Exercise_Muscle_Controller::class, 'store_exercise_muscle']);
@@ -53,22 +49,19 @@ Route::middleware('auth:sanctum')->group(
         Route::get('/master-exercise', [MasterExerciseController::class, 'index']);
         Route::get('/muscle-group', [MasterExerciseController::class, 'muscleGroups']);
 
-        // Exercise Group & Logs
-        Route::prefix('exercise-groups')->group(function () {
-            Route::get('/list', [ExerciseGroupController::class, 'index']);
-            Route::post('/create', [ExerciseGroupController::class, 'store']);
-            Route::get('/{id}', [ExerciseGroupController::class, 'show']);
-            Route::post('/update/{id}', [ExerciseGroupController::class, 'update']);
-            Route::post('/delete/{id}', [ExerciseGroupController::class, 'destroy']);
-            Route::post('/remove-exercise/{id}', [ExerciseGroupController::class, 'removeExercise']);
-            Route::post('/toggle-save/{id}', [ExerciseGroupController::class, 'toggleSave']);
-            Route::post('/duplicate/{id}', [ExerciseGroupController::class, 'duplicate']);
+        // Workout Plans
+        Route::prefix('workout-plans')->group(function () {
+            Route::get('/list', [WorkoutPlanController::class, 'index']);
+            Route::post('/create', [WorkoutPlanController::class, 'store']);
+            Route::get('/{id}', [WorkoutPlanController::class, 'show']);
+            Route::post('/update/{id}', [WorkoutPlanController::class, 'update']);
+            Route::post('/delete/{id}', [WorkoutPlanController::class, 'destroy']);
         });
         
-        Route::prefix('exercise-logs')->group(function () {
-            Route::get('/', [ExerciseLogController::class, 'index']);
-            Route::post('/start', [ExerciseLogController::class, 'start']);
-            Route::post('/end', [ExerciseLogController::class, 'end']);
+        // Workout Logs
+        Route::prefix('workout-logs')->group(function () {
+            Route::get('/', [WorkoutLogController::class, 'index']);
+            Route::post('/create', [WorkoutLogController::class, 'store']);
         });
     }
 );

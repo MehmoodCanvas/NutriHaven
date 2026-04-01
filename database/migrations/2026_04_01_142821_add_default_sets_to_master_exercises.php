@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('exercise_groups', function (Blueprint $table) {
-            $table->boolean('is_saved')->default(false)->after('title');
+        Schema::table('master_exercises', function (Blueprint $table) {
+            $table->json('default_sets')->nullable()->after('duration_minutes');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('exercise_groups', function (Blueprint $table) {
-            $table->dropColumn('is_saved');
+        Schema::table('master_exercises', function (Blueprint $table) {
+            $table->dropColumn('default_sets');
         });
     }
 };
