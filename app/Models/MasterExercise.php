@@ -31,4 +31,9 @@ class MasterExercise extends Model
     {
         return $this->belongsTo(AuxEquipment::class, 'aux_equipment_id');
     }
+
+    public function workoutVideo()
+    {
+        return $this->belongsTo(Workout_videos::class, 'workout_video_id', 'workout_videos_id');
+    }
 }

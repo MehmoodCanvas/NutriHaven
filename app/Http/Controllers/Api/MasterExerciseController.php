@@ -11,7 +11,7 @@ class MasterExerciseController extends Controller
 {
     public function index(Request $request)
     {
-        $query = MasterExercise::with(['muscleGroup', 'equipmentRequired', 'auxEquipment']);
+        $query = MasterExercise::with(['muscleGroup', 'equipmentRequired', 'auxEquipment', 'workoutVideo']);
 
         if ($request->has('muscle_group_id')) {
             $muscleGroupIds = $request->muscle_group_id;

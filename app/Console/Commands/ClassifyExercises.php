@@ -93,6 +93,25 @@ class ClassifyExercises extends Command
             $exercise->goals = $goals;
             $exercise->duration_minutes = $duration;
             $exercise->default_sets = $defaultSets;
+
+            // Try to match with a workout video (Case-Insensitive)
+            $searchName = strtolower($exercise->name);
+            $video = \App\Models\Workout_videos::whereRaw('LOWER(workout_videos_title) LIKE ?', ["%$searchName%"])
+                ->orWhereRaw('LOWER(workout_videos_description) LIKE ?', ["%$searchName%"])
+                ->first();
+
+            // If not found, try searching if the video title is inside the exercise name
+            if (!$video) {
+                $video = \App\Models\Workout_videos::all()->first(function($v) use ($searchName) {
+                    $vTitle = strtolower($v->workout_videos_title);
+                    return str_contains($searchName, $vTitle) || str_contains($vTitle, $searchName);
+                });
+            }
+
+            if ($video) {
+                $exercise->workout_video_id = $video->workout_videos_id;
+            }
+
             $exercise->save();
 
             $count++;
