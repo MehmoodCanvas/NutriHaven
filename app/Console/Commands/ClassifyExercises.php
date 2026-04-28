@@ -28,6 +28,7 @@ class ClassifyExercises extends Command
     public function handle()
     {
         $exercises = MasterExercise::all();
+        $videos = \App\Models\Workout_videos::all();
         $count = 0;
 
         foreach ($exercises as $exercise) {
@@ -81,9 +82,9 @@ class ClassifyExercises extends Command
             } else {
                 // Strength/Bodybuilding default
                 $defaultSets = [
-                    ['set' => 1, 'reps' => 12, 'weight' => 10],
-                    ['set' => 2, 'reps' => 12, 'weight' => 10],
-                    ['set' => 3, 'reps' => 12, 'weight' => 10],
+                    ['set' => 1, 'reps' => 10, 'weight' => 20],
+                    ['set' => 2, 'reps' => 10, 'weight' => 20],
+                    ['set' => 3, 'reps' => 10, 'weight' => 20],
                 ];
             }
 
@@ -96,20 +97,17 @@ class ClassifyExercises extends Command
 
             // Try to match with a workout video (Case-Insensitive)
             $searchName = strtolower($exercise->name);
-            $video = \App\Models\Workout_videos::whereRaw('LOWER(workout_videos_title) LIKE ?', ["%$searchName%"])
-                ->orWhereRaw('LOWER(workout_videos_description) LIKE ?', ["%$searchName%"])
-                ->first();
+            
+            $matchedVideo = $videos->first(function($v) use ($searchName) {
+                $vTitle = strtolower($v->workout_videos_title);
+                $vDesc = strtolower($v->workout_videos_description);
+                return str_contains($vTitle, $searchName) || 
+                       str_contains($vDesc, $searchName) || 
+                       str_contains($searchName, $vTitle);
+            });
 
-            // If not found, try searching if the video title is inside the exercise name
-            if (!$video) {
-                $video = \App\Models\Workout_videos::all()->first(function($v) use ($searchName) {
-                    $vTitle = strtolower($v->workout_videos_title);
-                    return str_contains($searchName, $vTitle) || str_contains($vTitle, $searchName);
-                });
-            }
-
-            if ($video) {
-                $exercise->workout_video_id = $video->workout_videos_id;
+            if ($matchedVideo) {
+                $exercise->workout_video_id = $matchedVideo->workout_videos_id;
             }
 
             $exercise->save();

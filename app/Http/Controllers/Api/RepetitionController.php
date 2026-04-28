@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Repetition;
+use Illuminate\Support\Facades\Validator;
 
 class RepetitionController extends Controller
 {
@@ -12,7 +13,7 @@ class RepetitionController extends Controller
     public function store_repetition(Request $request)
     {
 
-       $validation = \Validator::make($request->all(), [
+       $validation = Validator::make($request->all(), [
             'repetition_excerise_id' => 'required|integer',
             'repetition_user_workout_id' => 'required|integer',
             'repetition_time' => 'required',
