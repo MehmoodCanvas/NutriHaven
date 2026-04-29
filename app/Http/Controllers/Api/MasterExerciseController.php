@@ -56,9 +56,9 @@ class MasterExerciseController extends Controller
             $query->whereJsonContains('goals', $request->goal);
         }
 
-        if ($request->has('duration_minutes')) {
-            $query->where('duration_minutes', $request->duration_minutes);
-        }
+        // if ($request->has('duration_minutes')) {
+        //     $query->where('duration_minutes', $request->duration_minutes);
+        // }
 
         if ($request->has('difficulty')) {
             // Cumulative difficulty: higher levels include all lower-level exercises
