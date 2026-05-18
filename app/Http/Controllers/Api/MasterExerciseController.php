@@ -56,10 +56,6 @@ class MasterExerciseController extends Controller
             $query->whereJsonContains('goals', $request->goal);
         }
 
-        // if ($request->has('duration_minutes')) {
-        //     $query->where('duration_minutes', $request->duration_minutes);
-        // }
-
         if ($request->has('difficulty')) {
             // Cumulative difficulty: higher levels include all lower-level exercises
             $difficultyMap = [
@@ -88,6 +84,23 @@ class MasterExerciseController extends Controller
         }
 
         $perPage = $request->get('per_page', 20);
+
+        // Apply duration_minutes formula if provided
+        if ($request->has('duration_minutes')) {
+            $durationMinutes = (float) $request->duration_minutes;
+            if ($durationMinutes > 0) {
+                // Convert minutes to seconds
+                $durationSeconds = $durationMinutes * 60;
+                
+                // Formula: (Duration in seconds) / 375 (since 6.25 minutes = 375 seconds)
+                // This ensures 30 minutes (1800 sec) / 375 = 4.8 -> rounded to 5
+                $calculatedExercises = (int) round($durationSeconds / 375);
+                
+                // Ensure at least 1 exercise is shown if duration is valid
+                $perPage = $calculatedExercises > 0 ? $calculatedExercises : 1;
+            }
+        }
+
         $exercises = $query->paginate($perPage);
 
         return response()->json([
