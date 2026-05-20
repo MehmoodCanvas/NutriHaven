@@ -42,20 +42,72 @@ class VideosController extends Controller
         $category = new Category();
         $category->category_name = $request->category_name;
         $category->category_description = $request->category_description;
-        $file = $request->file('file');
-        $uploadedFile = cloudinary()->uploadApi()->upload($file->getRealPath(), [
-            'resource_type' => 'image',
-            'chunk_size' => 6000000,
-            'folder' => 'categories'
-        ]);
-        $uploadedFileUrl = $uploadedFile['secure_url'];
-        $displayName =$uploadedFile['public_id'];
-        $category->category_image = $uploadedFileUrl;
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $uploadedFile = cloudinary()->uploadApi()->upload($file->getRealPath(), [
+                'resource_type' => 'image',
+                'chunk_size' => 6000000,
+                'folder' => 'categories'
+            ]);
+            $category->category_image = $uploadedFile['secure_url'];
+        }
         
         $category->save();
 
-        dd($uploadedFile);
-        return back()     
-            ->with('success','Category added successfully');
+        return back()->with('success','Category added successfully');
+    }
+
+    public function update_category(Request $request, $id){
+        $category = Category::findOrFail($id);
+        $category->category_name = $request->category_name;
+        $category->category_description = $request->category_description;
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $uploadedFile = cloudinary()->uploadApi()->upload($file->getRealPath(), [
+                'resource_type' => 'image',
+                'chunk_size' => 6000000,
+                'folder' => 'categories'
+            ]);
+            $category->category_image = $uploadedFile['secure_url'];
+        }
+        
+        $category->save();
+
+        return back()->with('success','Category updated successfully');
+    }
+
+    public function delete_category($id){
+        $category = Category::findOrFail($id);
+        $category->delete();
+        return back()->with('success','Category deleted successfully');
+    }
+
+    public function update_video(Request $request, $id){
+        $video = Workout_videos::findOrFail($id);
+        $video->workout_videos_title = $request->workout_videos_title;
+        $video->workout_videos_description = $request->workout_videos_description;
+        $video->workout_videos_category_id = $request->workout_videos_category_id;
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $uploadedFile = cloudinary()->uploadApi()->upload($file->getRealPath(), [
+                'resource_type' => 'video',
+                'chunk_size' => 6000000,
+                'folder' => 'videos'
+            ]);
+            $video->workout_videos_cdn_url = $uploadedFile['secure_url'];
+        }
+        
+        $video->save();
+
+        return back()->with('success','Video updated successfully');
+    }
+
+    public function delete_video($id){
+        $video = Workout_videos::findOrFail($id);
+        $video->delete();
+        return back()->with('success','Video deleted successfully');
     }
 }

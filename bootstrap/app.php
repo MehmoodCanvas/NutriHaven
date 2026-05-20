@@ -15,11 +15,15 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         //
     })
-    ->withExceptions(function ($exceptions) {
+    ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (AuthenticationException $e, $request) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Unauthenticated. Please login first.'
-            ], 401);
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthenticated. Please login first.'
+                ], 401);
+            }
+
+            return redirect()->guest(route('login'));
         });
     })->create();

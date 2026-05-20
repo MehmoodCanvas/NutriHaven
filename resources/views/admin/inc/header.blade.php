@@ -29,6 +29,13 @@
   <link href="{{asset('assets/admin/css/style.css')}}" rel="stylesheet">
   <link href="{{asset('assets/admin/css/tags.css')}}" rel="stylesheet">
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <style>
+    /* Fix for flash messages overlapping with the fixed header */
+    .fl-wrapper {
+        z-index: 1060 !important;
+        margin-top: 60px !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -58,6 +65,7 @@
         <li class="nav-item dropdown pe-3">
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=0d6efd&color=fff" alt="Profile" class="rounded-circle" width="36" height="36">
             <span class="d-none d-md-block dropdown-toggle ps-2">{{Auth::user()->name}}</span>
           </a><!-- End Profile Iamge Icon -->
 
@@ -71,7 +79,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+              <a class="dropdown-item d-flex align-items-center" href="{{ url('admin/profile') }}">
                 <i class="bi bi-person"></i>
                 <span>My Profile</span>
               </a>
@@ -81,19 +89,9 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+              <a class="dropdown-item d-flex align-items-center" href="{{ url('admin/profile') }}">
                 <i class="bi bi-gear"></i>
                 <span>Account Settings</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                <i class="bi bi-question-circle"></i>
-                <span>Need Help?</span>
               </a>
             </li>
             <li>
@@ -121,14 +119,47 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="{{url('admin/dashboard')}}">
+        <a class="nav-link {{ request()->is('admin/dashboard*') ? '' : 'collapsed' }}" href="{{url('admin/dashboard')}}">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
       </li><!-- End Dashboard Nav -->
+
+      <li class="nav-heading">Exercise Management</li>
+
+      <li class="nav-item">
+        <a class="nav-link {{ request()->is('admin/master-exercises*') ? '' : 'collapsed' }}" href="{{url('admin/master-exercises')}}">
+          <i class="bi bi-lightning"></i>
+          <span>Master Exercises</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {{ request()->is('admin/muscle-groups*') ? '' : 'collapsed' }}" href="{{url('admin/muscle-groups')}}">
+          <i class="bi bi-heart-pulse"></i>
+          <span>Muscle Groups</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {{ request()->is('admin/equipments*') ? '' : 'collapsed' }}" href="{{url('admin/equipments')}}">
+          <i class="bi bi-wrench"></i>
+          <span>Equipment</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {{ request()->is('admin/aux-equipments*') ? '' : 'collapsed' }}" href="{{url('admin/aux-equipments')}}">
+          <i class="bi bi-tools"></i>
+          <span>Aux Equipment</span>
+        </a>
+      </li>
+
+      <!-- <li class="nav-heading">Legacy Data</li>
+
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-journal-text"></i><span>Exercise & Muscle Management</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-journal-text"></i><span>Exercise & Muscle (Old)</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
@@ -140,34 +171,36 @@
         </a>
           </li>
         </ul>
-      </li><!-- End Forms Nav -->
-  
-  
+      </li>End Forms Nav -->
+
+      <li class="nav-heading">Content</li>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{{url('admin/categories')}}">
+        <a class="nav-link {{ request()->is('admin/categories*') ? '' : 'collapsed' }}" href="{{url('admin/categories')}}">
           <i class="bi bi-tag"></i>
           <span>All Categories</span>
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{{url('admin/videos')}}">
+        <a class="nav-link {{ request()->is('admin/videos*') ? '' : 'collapsed' }}" href="{{url('admin/videos')}}">
           <i class="bi bi-camera-video"></i>
           <span>All Videos</span>
         </a>
       </li>   
 
-      <li class="nav-heading">General Setting</li>
+      <li class="nav-heading">Users & Settings</li>
+
       <li class="nav-item">
-        <a class="nav-link collapsed" href="{{url('admin/global-setting')}}">
-          <i class="bi bi-gear"></i>
-          <span>Global Setting</span>
+        <a class="nav-link {{ request()->is('admin/users*') ? '' : 'collapsed' }}" href="{{url('admin/users')}}">
+          <i class="bi bi-people"></i>
+          <span>App Users</span>
         </a>
       </li>
+
       <li class="nav-item">
-        <a class="nav-link collapsed" href="">
+        <a class="nav-link {{ request()->is('admin/profile*') ? '' : 'collapsed' }}" href="{{url('admin/profile')}}">
           <i class="bi bi-person"></i>
-          <span>Profile</span>
+          <span>My Profile</span>
         </a>
       </li><!-- End Profile Page Nav -->
 
