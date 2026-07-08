@@ -15,6 +15,7 @@ class MasterExercise extends Model
         'difficulty' => 'string',
         'goals' => 'array',
         'default_sets' => 'array',
+        'is_time_based' => 'boolean',
     ];
 
     public function muscleGroup()

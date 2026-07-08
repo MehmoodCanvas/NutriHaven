@@ -90,6 +90,7 @@ class AdminMasterExerciseController extends Controller
             'name', 'muscle_group_id', 'difficulty', 'equipment_required_id',
             'aux_equipment_id', 'workout_video_id', 'primary_muscles', 'secondary_muscles'
         ]);
+        $data['is_time_based'] = $request->has('is_time_based');
 
         // Handle goals as array
         if ($request->filled('goals')) {
@@ -156,6 +157,7 @@ class AdminMasterExerciseController extends Controller
             'name', 'muscle_group_id', 'difficulty', 'equipment_required_id',
             'aux_equipment_id', 'workout_video_id', 'primary_muscles', 'secondary_muscles'
         ]);
+        $data['is_time_based'] = $request->has('is_time_based');
 
         // Handle nullable foreign keys
         $data['equipment_required_id'] = $request->equipment_required_id ?: null;

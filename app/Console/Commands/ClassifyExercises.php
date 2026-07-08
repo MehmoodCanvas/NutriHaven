@@ -34,24 +34,28 @@ class ClassifyExercises extends Command
         foreach ($exercises as $exercise) {
             $name = strtolower($exercise->name);
             $goals = [];
-            $duration = 10; // Default
+            $isTimeBased = false;
 
             // Rule 1: Cardio & Movement
             if (preg_match('/(run|jump|walk|treadmill|bike|rope|rowing|cycling|cardio|skip|step|skater)/i', $name)) {
                 $goals = array_merge($goals, ['Cardio', 'Weight Loss', 'Increase energy levels']);
-                $duration = 15;
+                $isTimeBased = true;
             }
 
             // Rule 2: Flexibility & Stretching
             if (preg_match('/(stretch|yoga|hold|rotation|flexion|band|mobility|roll|pose)/i', $name)) {
                 $goals = array_merge($goals, ['Flexibility', 'Improve Mobility', 'Stress Relief', 'Rehab', 'Improve posture']);
-                $duration = 5;
+                $isTimeBased = true;
             }
 
             // Rule 3: Abs & Core
-            if (preg_match('/(crunch|plank|sit-up|sit up|twist|abs|core|ab |leg raise|russian|tuck)/i', $name)) {
+            if (preg_match('/(crunch|sit-up|sit up|twist|abs|core|ab |leg raise|russian|tuck)/i', $name)) {
                 $goals = array_merge($goals, ['Weight Maintenance', 'Improve posture']);
-                if ($duration == 10) $duration = 5; // Isolation work
+                $isTimeBased = false;
+            }
+            if (preg_match('/(plank|hold|hollow body)/i', $name)) {
+                $goals = array_merge($goals, ['Weight Maintenance', 'Improve posture']);
+                $isTimeBased = true;
             }
 
             // Rule 4: Bodybuilding & Weights
@@ -67,17 +71,12 @@ class ClassifyExercises extends Command
 
             // Default Sets logic
             $defaultSets = [];
-            if (in_array('Cardio', $goals)) {
+            if ($isTimeBased) {
+                $dur = in_array('Cardio', $goals) ? '10m' : '30s';
                 $defaultSets = [
-                    ['set' => 1, 'reps' => 15, 'weight' => 0],
-                    ['set' => 2, 'reps' => 15, 'weight' => 0],
-                    ['set' => 3, 'reps' => 15, 'weight' => 0],
-                ];
-            } elseif (in_array('Flexibility', $goals)) {
-                $defaultSets = [
-                    ['set' => 1, 'reps' => 1, 'weight' => 0, 'duration' => '30s'],
-                    ['set' => 2, 'reps' => 1, 'weight' => 0, 'duration' => '30s'],
-                    ['set' => 3, 'reps' => 1, 'weight' => 0, 'duration' => '30s'],
+                    ['set' => 1, 'duration' => $dur],
+                    ['set' => 2, 'duration' => $dur],
+                    ['set' => 3, 'duration' => $dur],
                 ];
             } else {
                 // Strength/Bodybuilding default
@@ -92,7 +91,7 @@ class ClassifyExercises extends Command
             $goals = array_values(array_unique($goals));
 
             $exercise->goals = $goals;
-            $exercise->duration_minutes = $duration;
+            $exercise->is_time_based = $isTimeBased;
             $exercise->default_sets = $defaultSets;
 
             // Try to match with a workout video (Case-Insensitive)

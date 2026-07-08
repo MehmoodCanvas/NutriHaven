@@ -133,7 +133,13 @@
 
                             <!-- Default Sets UI -->
                             <div class="mb-3">
-                                <label class="form-label">Default Sets</label>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <label class="form-label mb-0">Default Sets</label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" value="1" id="isTimeBasedEdit" name="is_time_based" {{ $exercise->is_time_based ? 'checked' : '' }}>
+                                        <label class="form-check-label text-muted small" for="isTimeBasedEdit">Time Based Exercise (Duration instead of Reps/Weight)</label>
+                                    </div>
+                                </div>
                                 <div id="edit-sets-container">
                                     <!-- Existing sets will be loaded here via JS -->
                                 </div>
@@ -189,34 +195,65 @@ $(document).ready(function() {
 
     // ===== Default Sets Builder (Edit) =====
     var editSetCount = 0;
+    var isTimeBased = $('#isTimeBasedEdit').is(':checked');
 
-    function editSetRow(setNum, reps, weight) {
+    $('#isTimeBasedEdit').change(function() {
+        isTimeBased = $(this).is(':checked');
+        $('#edit-sets-container').empty();
+        editSetCount = 0;
+        $('#edit-add-set-btn').click();
+    });
+
+    function editSetRow(setNum, reps, weight, duration) {
         reps = reps || 10;
         weight = weight || 0;
-        return `
-        <div class="row align-items-center mb-2 set-row" data-set="${setNum}">
-            <div class="col-3">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text">Set</span>
-                    <input type="text" class="form-control" value="${setNum}" readonly style="max-width:50px;">
+        duration = duration || '30s';
+        
+        if (isTimeBased) {
+            return `
+            <div class="row align-items-center mb-2 set-row" data-set="${setNum}">
+                <div class="col-3">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Set</span>
+                        <input type="text" class="form-control" value="${setNum}" readonly style="max-width:50px;">
+                    </div>
                 </div>
-            </div>
-            <div class="col-3">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text">Reps</span>
-                    <input type="number" class="form-control set-reps" value="${reps}" min="1">
+                <div class="col-7">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Duration</span>
+                        <input type="text" class="form-control set-duration" value="${duration}" placeholder="e.g. 30s or 1m">
+                    </div>
                 </div>
-            </div>
-            <div class="col-4">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text">Weight</span>
-                    <input type="number" class="form-control set-weight" value="${weight}" min="0" step="0.5">
+                <div class="col-2">
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-set-btn"><i class="bi bi-x-lg"></i></button>
                 </div>
-            </div>
-            <div class="col-2">
-                <button type="button" class="btn btn-sm btn-outline-danger remove-set-btn"><i class="bi bi-x-lg"></i></button>
-            </div>
-        </div>`;
+            </div>`;
+        } else {
+            return `
+            <div class="row align-items-center mb-2 set-row" data-set="${setNum}">
+                <div class="col-3">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Set</span>
+                        <input type="text" class="form-control" value="${setNum}" readonly style="max-width:50px;">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Reps</span>
+                        <input type="number" class="form-control set-reps" value="${reps}" min="1">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Weight</span>
+                        <input type="number" class="form-control set-weight" value="${weight}" min="0" step="0.5">
+                    </div>
+                </div>
+                <div class="col-2">
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-set-btn"><i class="bi bi-x-lg"></i></button>
+                </div>
+            </div>`;
+        }
     }
 
     // Load existing sets from DB
@@ -227,7 +264,8 @@ $(document).ready(function() {
             $('#edit-sets-container').append(editSetRow(
                 s.set || editSetCount,
                 s.reps || 10,
-                s.weight || 0
+                s.weight || 0,
+                s.duration || '30s'
             ));
         });
     }
@@ -251,11 +289,18 @@ $(document).ready(function() {
     $('#editExerciseForm').on('submit', function() {
         var sets = [];
         $('#edit-sets-container .set-row').each(function() {
-            sets.push({
-                set: parseInt($(this).attr('data-set')),
-                reps: parseInt($(this).find('.set-reps').val()) || 10,
-                weight: parseFloat($(this).find('.set-weight').val()) || 0
-            });
+            if (isTimeBased) {
+                sets.push({
+                    set: parseInt($(this).attr('data-set')),
+                    duration: $(this).find('.set-duration').val() || '30s'
+                });
+            } else {
+                sets.push({
+                    set: parseInt($(this).attr('data-set')),
+                    reps: parseInt($(this).find('.set-reps').val()) || 10,
+                    weight: parseFloat($(this).find('.set-weight').val()) || 0
+                });
+            }
         });
         if (sets.length > 0) {
             $('#edit-default-sets-json').val(JSON.stringify(sets));

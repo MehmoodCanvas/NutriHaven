@@ -12,17 +12,16 @@ class WorkoutLog extends Model
     protected $fillable = [
         'member_id',
         'workout_plan_id',
+        'name',
         'start_time',
         'end_time',
         'log_date',
-        'log_data',
     ];
 
     protected $casts = [
         'start_time' => 'datetime',
         'end_time' => 'datetime',
         'log_date' => 'date',
-        'log_data' => 'array',
     ];
 
     public function member()
@@ -33,5 +32,10 @@ class WorkoutLog extends Model
     public function workoutPlan()
     {
         return $this->belongsTo(WorkoutPlan::class);
+    }
+
+    public function exercises()
+    {
+        return $this->hasMany(WorkoutLogExercise::class);
     }
 }

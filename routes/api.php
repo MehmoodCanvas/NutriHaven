@@ -60,8 +60,9 @@ Route::middleware('auth:sanctum')->group(
         
         // Workout Logs
         Route::prefix('workout-logs')->group(function () {
-            Route::get('/', [WorkoutLogController::class, 'index']);
             Route::post('/create', [WorkoutLogController::class, 'store']);
+            Route::get('/history', [WorkoutLogController::class, 'history']);
+            Route::get('/insights', [WorkoutLogController::class, 'insights']);
         });
     }
 );

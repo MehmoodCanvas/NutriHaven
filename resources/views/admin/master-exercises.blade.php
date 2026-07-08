@@ -51,7 +51,12 @@
                                             <span class="badge bg-light text-muted"><i class="bi bi-image"></i></span>
                                         @endif
                                     </td>
-                                    <td><strong>{{ $exercise->name }}</strong></td>
+                                    <td>
+                                        <strong>{{ $exercise->name }}</strong>
+                                        @if($exercise->is_time_based)
+                                            <br><span class="badge bg-info mt-1"><i class="bi bi-stopwatch"></i> Time Based</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         @if($exercise->difficulty == 'Beginner')
                                             <span class="badge bg-success">Beginner</span>
@@ -191,7 +196,13 @@
 
                     <!-- Default Sets UI -->
                     <div class="mb-3">
-                        <label class="form-label">Default Sets</label>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="form-label mb-0">Default Sets</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" value="1" id="isTimeBased" name="is_time_based">
+                                <label class="form-check-label text-muted small" for="isTimeBased">Time Based Exercise (Duration instead of Reps/Weight)</label>
+                            </div>
+                        </div>
                         <div id="create-sets-container">
                             <!-- Sets rows will be added here -->
                         </div>
@@ -249,34 +260,65 @@ $(document).ready(function() {
 
     // ===== Default Sets Builder (Create) =====
     var createSetCount = 0;
+    var isTimeBasedCreate = false;
 
-    function createSetRow(setNum, reps, weight) {
+    $('#isTimeBased').change(function() {
+        isTimeBasedCreate = $(this).is(':checked');
+        $('#create-sets-container').empty();
+        createSetCount = 0;
+        $('#create-add-set-btn').click();
+    });
+
+    function createSetRow(setNum, reps, weight, duration) {
         reps = reps || 10;
         weight = weight || 0;
-        return `
-        <div class="row align-items-center mb-2 set-row" data-set="${setNum}">
-            <div class="col-3">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text">Set</span>
-                    <input type="text" class="form-control" value="${setNum}" readonly style="max-width:50px;">
+        duration = duration || '30s';
+        
+        if (isTimeBasedCreate) {
+            return `
+            <div class="row align-items-center mb-2 set-row" data-set="${setNum}">
+                <div class="col-3">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Set</span>
+                        <input type="text" class="form-control" value="${setNum}" readonly style="max-width:50px;">
+                    </div>
                 </div>
-            </div>
-            <div class="col-3">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text">Reps</span>
-                    <input type="number" class="form-control set-reps" value="${reps}" min="1">
+                <div class="col-7">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Duration</span>
+                        <input type="text" class="form-control set-duration" value="${duration}" placeholder="e.g. 30s or 1m">
+                    </div>
                 </div>
-            </div>
-            <div class="col-4">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text">Weight</span>
-                    <input type="number" class="form-control set-weight" value="${weight}" min="0" step="0.5">
+                <div class="col-2">
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-set-btn"><i class="bi bi-x-lg"></i></button>
                 </div>
-            </div>
-            <div class="col-2">
-                <button type="button" class="btn btn-sm btn-outline-danger remove-set-btn"><i class="bi bi-x-lg"></i></button>
-            </div>
-        </div>`;
+            </div>`;
+        } else {
+            return `
+            <div class="row align-items-center mb-2 set-row" data-set="${setNum}">
+                <div class="col-3">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Set</span>
+                        <input type="text" class="form-control" value="${setNum}" readonly style="max-width:50px;">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Reps</span>
+                        <input type="number" class="form-control set-reps" value="${reps}" min="1">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Weight</span>
+                        <input type="number" class="form-control set-weight" value="${weight}" min="0" step="0.5">
+                    </div>
+                </div>
+                <div class="col-2">
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-set-btn"><i class="bi bi-x-lg"></i></button>
+                </div>
+            </div>`;
+        }
     }
 
     $('#create-add-set-btn').on('click', function() {
@@ -299,11 +341,18 @@ $(document).ready(function() {
     $('#createExerciseForm').on('submit', function() {
         var sets = [];
         $('#create-sets-container .set-row').each(function() {
-            sets.push({
-                set: parseInt($(this).attr('data-set')),
-                reps: parseInt($(this).find('.set-reps').val()) || 10,
-                weight: parseFloat($(this).find('.set-weight').val()) || 0
-            });
+            if (isTimeBasedCreate) {
+                sets.push({
+                    set: parseInt($(this).attr('data-set')),
+                    duration: $(this).find('.set-duration').val() || '30s'
+                });
+            } else {
+                sets.push({
+                    set: parseInt($(this).attr('data-set')),
+                    reps: parseInt($(this).find('.set-reps').val()) || 10,
+                    weight: parseFloat($(this).find('.set-weight').val()) || 0
+                });
+            }
         });
         if (sets.length > 0) {
             $('#create-default-sets-json').val(JSON.stringify(sets));
