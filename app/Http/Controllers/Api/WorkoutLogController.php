@@ -231,7 +231,7 @@ class WorkoutLogController extends Controller
             $minutes = $totalMinutesThisWeek % 60;
             $totalTimeThisWeek = "{$hours}h {$minutes}m";
 
-            // 3. Avg Duration (last 30 days)
+            // 3. Avg Duration (last 30 days vs previous 30 days)
             $last30Days = $now->copy()->subDays(30);
             $recentLogs = WorkoutLog::where('member_id', $memberId)
                 ->where('log_date', '>=', $last30Days->format('Y-m-d'))
@@ -244,6 +244,27 @@ class WorkoutLogController extends Controller
                 }
             }
             $avgDuration = $recentLogs->count() > 0 ? round($totalDuration30Days / $recentLogs->count()) : 0;
+
+            // Previous 30 days (day 31 to day 60) for comparison
+            $prev30Start = $now->copy()->subDays(60);
+            $prev30End = $now->copy()->subDays(31);
+            $prevLogs = WorkoutLog::where('member_id', $memberId)
+                ->whereBetween('log_date', [$prev30Start->format('Y-m-d'), $prev30End->format('Y-m-d')])
+                ->get();
+
+            $prevTotalDuration = 0;
+            foreach ($prevLogs as $log) {
+                if ($log->start_time && $log->end_time) {
+                    $prevTotalDuration += Carbon::parse($log->start_time)->diffInMinutes(Carbon::parse($log->end_time));
+                }
+            }
+            $prevAvgDuration = $prevLogs->count() > 0 ? round($prevTotalDuration / $prevLogs->count()) : 0;
+
+            // Calculate percentage change
+            $avgDurationChange = 0;
+            if ($prevAvgDuration > 0) {
+                $avgDurationChange = round((($avgDuration - $prevAvgDuration) / $prevAvgDuration) * 100);
+            }
 
             // 4. Weekly Activity Chart (last 7 days duration)
             $weeklyActivity = [];
@@ -344,6 +365,7 @@ class WorkoutLogController extends Controller
                     'workouts_this_week' => $workoutsThisWeek,
                     'total_time' => $totalTimeThisWeek,
                     'avg_duration' => $avgDuration,
+                    'avg_duration_change' => $avgDurationChange,
                     'weekly_activity' => $weeklyActivity,
                     'monthly_activity' => $monthlyActivity,
                     'workout_length' => $workoutLength,
