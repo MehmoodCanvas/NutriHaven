@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\WorkoutLog;
+use App\Models\WorkoutPlan;
 use App\Models\WorkoutLogExercise;
 use App\Models\WorkoutLogExerciseSet;
 use Illuminate\Http\Request;
@@ -22,6 +23,7 @@ class WorkoutLogController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'nullable|string|max:255',
+                'workout_plan_id' => 'required|exists:workout_plans,id',
                 'start_time' => 'required|date',
                 'end_time' => 'required|date',
                 'log_date' => 'required|date',
@@ -43,11 +45,17 @@ class WorkoutLogController extends Controller
 
             $user = Auth::user();
 
+            // Auto-fill name from workout plan
+            $plan_id = $request->workout_plan_id;
+            $plan = WorkoutPlan::where('id', $plan_id)->first();
+            $logName = $request->name ?: ($plan ? $plan->name : 'Workout');
+
             DB::beginTransaction();
 
             $log = WorkoutLog::create([
                 'member_id' => $user->member_id,
-                'name' => $request->name,
+                'workout_plan_id' => $plan_id,
+                'name' => $logName,
                 'start_time' => Carbon::parse($request->start_time),
                 'end_time' => Carbon::parse($request->end_time),
                 'log_date' => $request->log_date,
@@ -103,7 +111,8 @@ class WorkoutLogController extends Controller
 
             $query = WorkoutLog::with([
                 'exercises.masterExercise.muscleGroup',
-                'exercises.sets'
+                'exercises.sets',
+                'workoutPlan'
             ])->where('member_id', $user->member_id);
 
             // Filter by name
@@ -160,6 +169,7 @@ class WorkoutLogController extends Controller
 
                 return [
                     'id' => $log->id,
+                    'workout_plan' => $log->workoutPlan,
                     'name' => $log->name ?? 'Workout',
                     'date' => Carbon::parse($log->log_date)->format('M d, Y'),
                     'duration' => "{$durationInMinutes} min",
