@@ -365,11 +365,11 @@ class WorkoutLogController extends Controller
                     'workouts_this_week' => $workoutsThisWeek,
                     'total_time' => $totalTimeThisWeek,
                     'average' => ['duration' => $avgDuration, 'duration_change' => $avgDurationChange],
+                    'most_trained' => $mostTrainedData,
+                    'streak' => "{$streak} Days",
                     'weekly_activity' => $weeklyActivity,
                     'monthly_activity' => $monthlyActivity,
-                    'workout_length' => $workoutLength,
-                    'most_trained' => $mostTrainedData,
-                    'streak' => "{$streak} Days"
+                    'workout_length' => $workoutLength
                 ]
             ]);
 
