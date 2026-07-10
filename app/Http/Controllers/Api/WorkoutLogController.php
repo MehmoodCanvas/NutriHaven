@@ -245,14 +245,14 @@ class WorkoutLogController extends Controller
             }
             $avgDuration = $recentLogs->count() > 0 ? round($totalDuration30Days / $recentLogs->count()) : 0;
 
-            // 4. Weekly Activity Chart (Mon-Sun duration) — FIX: compare dates properly
+            // 4. Weekly Activity Chart (last 7 days duration)
             $weeklyActivity = [];
-            for ($i = 0; $i < 7; $i++) {
-                $day = $startOfWeek->copy()->addDays($i);
+            for ($i = 6; $i >= 0; $i--) {
+                $day = $now->copy()->subDays($i);
                 $dayStr = $day->format('Y-m-d');
                 
                 $dayDuration = 0;
-                foreach ($weeklyLogs as $log) {
+                foreach ($recentLogs as $log) {
                     $logDateStr = $log->log_date instanceof Carbon ? $log->log_date->format('Y-m-d') : $log->log_date;
                     if ($logDateStr === $dayStr && $log->start_time && $log->end_time) {
                         $dayDuration += Carbon::parse($log->start_time)->diffInMinutes(Carbon::parse($log->end_time));
@@ -260,9 +260,8 @@ class WorkoutLogController extends Controller
                 }
                 
                 $weeklyActivity[] = [
-                    'day' => substr($day->format('D'), 0, 3), // Mon, Tue, Wed...
-                    'date' => $dayStr,
-                    'duration' => $dayDuration
+                    'label' => substr($day->format('D'), 0, 3), // Mon, Tue, Wed...
+                    'count' => $dayDuration
                 ];
             }
 
@@ -299,8 +298,8 @@ class WorkoutLogController extends Controller
             $monthLabels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             for ($m = 1; $m <= 12; $m++) {
                 $monthlyActivity[] = [
-                    'month' => $monthLabels[$m - 1],
-                    'workouts' => (int) ($monthlyRaw[$m] ?? 0),
+                    'label' => $monthLabels[$m - 1],
+                    'count' => (int) ($monthlyRaw[$m] ?? 0),
                 ];
             }
 
@@ -319,8 +318,7 @@ class WorkoutLogController extends Controller
                 }
 
                 $workoutLength[] = [
-                    'date' => $dateStr,
-                    'day' => $date->format('d'),
+                    'label' => (int) $date->format('d'),
                     'duration' => $dayDuration,
                 ];
             }
