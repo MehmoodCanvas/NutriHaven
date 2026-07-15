@@ -58,13 +58,14 @@ Route::middleware('auth:sanctum')->group(
             Route::post('/delete/{id}', [WorkoutPlanController::class, 'destroy']);
         });
         
-        // Workout Logs
-        Route::prefix('workout-logs')->group(function () {
-            Route::post('/create', [WorkoutLogController::class, 'store']);
-            Route::get('/history', [WorkoutLogController::class, 'history']);
-            Route::get('/insights', [WorkoutLogController::class, 'insights']);
-        });
+       
     }
 );
 
 
+// Workout Logs
+Route::prefix('workout-logs')->group(function () {
+    Route::post('/create', [WorkoutLogController::class, 'store']);
+    Route::get('/history', [WorkoutLogController::class, 'history']);
+    Route::get('/insights', [WorkoutLogController::class, 'insights']);
+});

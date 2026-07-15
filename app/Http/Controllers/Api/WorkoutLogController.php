@@ -215,8 +215,8 @@ class WorkoutLogController extends Controller
     public function insights(Request $request)
     {
         try {
-            $user = Auth::user();
-            $memberId = $user->member_id;
+            // $user = Auth::user();
+            $memberId = 4;
 
             $now = Carbon::now();
             $startOfWeek = $now->copy()->startOfWeek();
