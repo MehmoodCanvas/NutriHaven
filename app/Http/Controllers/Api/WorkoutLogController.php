@@ -16,6 +16,14 @@ use Carbon\Carbon;
 class WorkoutLogController extends Controller
 {
     /**
+     * Helper: format a number to max 2 decimal places, safe for json_encode on any server.
+     */
+    private function fmt($value, $decimals = 2)
+    {
+        return (float) number_format((float) $value, $decimals, '.', '');
+    }
+
+    /**
      * Store a new workout log (with exercises and sets).
      */
     public function store(Request $request)
@@ -134,7 +142,7 @@ class WorkoutLogController extends Controller
                 ->paginate($perPage);
 
             $formattedLogs = $logs->map(function ($log) {
-                $durationInMinutes = round(Carbon::parse($log->start_time)->diffInMinutes(Carbon::parse($log->end_time)), 2);
+                $durationInMinutes = $this->fmt(Carbon::parse($log->start_time)->diffInMinutes(Carbon::parse($log->end_time)));
                 
                 $muscles = collect();
                 $formattedExercises = $log->exercises->map(function ($exercise) use (&$muscles) {
@@ -157,7 +165,7 @@ class WorkoutLogController extends Controller
                     } else {
                         $maxReps = $exercise->sets->max('reps');
                         $maxWeight = $exercise->sets->max('weight');
-                        $maxWeight = $maxWeight !== null ? round($maxWeight, 2) : null;
+                        $maxWeight = $maxWeight !== null ? $this->fmt($maxWeight) : null;
                         return [
                             'name' => $exercise->masterExercise->name ?? 'Unknown Exercise',
                             'is_time_based' => false,
@@ -244,7 +252,7 @@ class WorkoutLogController extends Controller
                     $totalDuration30Days += Carbon::parse($log->start_time)->diffInMinutes(Carbon::parse($log->end_time));
                 }
             }
-            $avgDuration = $recentLogs->count() > 0 ? round($totalDuration30Days / $recentLogs->count(), 2) : 0;
+            $avgDuration = $recentLogs->count() > 0 ? $this->fmt($totalDuration30Days / $recentLogs->count()) : 0;
 
             // Previous 30 days (day 31 to day 60) for comparison
             $prev30Start = $now->copy()->subDays(60);
@@ -259,12 +267,12 @@ class WorkoutLogController extends Controller
                     $prevTotalDuration += Carbon::parse($log->start_time)->diffInMinutes(Carbon::parse($log->end_time));
                 }
             }
-            $prevAvgDuration = $prevLogs->count() > 0 ? round($prevTotalDuration / $prevLogs->count(), 2) : 0;
+            $prevAvgDuration = $prevLogs->count() > 0 ? $this->fmt($prevTotalDuration / $prevLogs->count()) : 0;
 
             // Calculate percentage change
             $avgDurationChange = 0;
             if ($prevAvgDuration > 0) {
-                $avgDurationChange = round((($avgDuration - $prevAvgDuration) / $prevAvgDuration) * 100, 2);
+                $avgDurationChange = $this->fmt((($avgDuration - $prevAvgDuration) / $prevAvgDuration) * 100);
             }
 
             // 4. Weekly Activity Chart (last 7 days duration)
@@ -283,7 +291,7 @@ class WorkoutLogController extends Controller
                 
                 $weeklyActivity[] = [
                     'label' => substr($day->format('D'), 0, 3), // Mon, Tue, Wed...
-                    'count' => round($dayDuration, 2)
+                    'count' => $this->fmt($dayDuration)
                 ];
             }
 
@@ -321,7 +329,7 @@ class WorkoutLogController extends Controller
             for ($m = 1; $m <= 12; $m++) {
                 $monthlyActivity[] = [
                     'label' => $monthLabels[$m - 1],
-                    'count' => round((float)($monthlyRaw[$m] ?? 0), 2),
+                    'count' => $this->fmt($monthlyRaw[$m] ?? 0),
                 ];
             }
 
@@ -341,7 +349,7 @@ class WorkoutLogController extends Controller
 
                 $workoutLength[] = [
                     'label' => (int) $date->format('d'),
-                    'duration' => round($dayDuration, 2),
+                    'duration' => $this->fmt($dayDuration),
                 ];
             }
 
