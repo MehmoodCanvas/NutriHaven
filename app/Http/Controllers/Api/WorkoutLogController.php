@@ -134,7 +134,7 @@ class WorkoutLogController extends Controller
                 ->paginate($perPage);
 
             $formattedLogs = $logs->map(function ($log) {
-                $durationInMinutes = Carbon::parse($log->start_time)->diffInMinutes(Carbon::parse($log->end_time));
+                $durationInMinutes = round(Carbon::parse($log->start_time)->diffInMinutes(Carbon::parse($log->end_time)), 2);
                 
                 $muscles = collect();
                 $formattedExercises = $log->exercises->map(function ($exercise) use (&$muscles) {
@@ -157,6 +157,7 @@ class WorkoutLogController extends Controller
                     } else {
                         $maxReps = $exercise->sets->max('reps');
                         $maxWeight = $exercise->sets->max('weight');
+                        $maxWeight = $maxWeight !== null ? round($maxWeight, 2) : null;
                         return [
                             'name' => $exercise->masterExercise->name ?? 'Unknown Exercise',
                             'is_time_based' => false,
@@ -243,7 +244,7 @@ class WorkoutLogController extends Controller
                     $totalDuration30Days += Carbon::parse($log->start_time)->diffInMinutes(Carbon::parse($log->end_time));
                 }
             }
-            $avgDuration = $recentLogs->count() > 0 ? round($totalDuration30Days / $recentLogs->count()) : 0;
+            $avgDuration = $recentLogs->count() > 0 ? round($totalDuration30Days / $recentLogs->count(), 2) : 0;
 
             // Previous 30 days (day 31 to day 60) for comparison
             $prev30Start = $now->copy()->subDays(60);
@@ -258,12 +259,12 @@ class WorkoutLogController extends Controller
                     $prevTotalDuration += Carbon::parse($log->start_time)->diffInMinutes(Carbon::parse($log->end_time));
                 }
             }
-            $prevAvgDuration = $prevLogs->count() > 0 ? round($prevTotalDuration / $prevLogs->count()) : 0;
+            $prevAvgDuration = $prevLogs->count() > 0 ? round($prevTotalDuration / $prevLogs->count(), 2) : 0;
 
             // Calculate percentage change
             $avgDurationChange = 0;
             if ($prevAvgDuration > 0) {
-                $avgDurationChange = round((($avgDuration - $prevAvgDuration) / $prevAvgDuration) * 100);
+                $avgDurationChange = round((($avgDuration - $prevAvgDuration) / $prevAvgDuration) * 100, 2);
             }
 
             // 4. Weekly Activity Chart (last 7 days duration)
@@ -282,7 +283,7 @@ class WorkoutLogController extends Controller
                 
                 $weeklyActivity[] = [
                     'label' => substr($day->format('D'), 0, 3), // Mon, Tue, Wed...
-                    'count' => $dayDuration
+                    'count' => round($dayDuration, 2)
                 ];
             }
 
@@ -320,7 +321,7 @@ class WorkoutLogController extends Controller
             for ($m = 1; $m <= 12; $m++) {
                 $monthlyActivity[] = [
                     'label' => $monthLabels[$m - 1],
-                    'count' => (int) ($monthlyRaw[$m] ?? 0),
+                    'count' => round((float)($monthlyRaw[$m] ?? 0), 2),
                 ];
             }
 
@@ -340,7 +341,7 @@ class WorkoutLogController extends Controller
 
                 $workoutLength[] = [
                     'label' => (int) $date->format('d'),
-                    'duration' => $dayDuration,
+                    'duration' => round($dayDuration, 2),
                 ];
             }
 
