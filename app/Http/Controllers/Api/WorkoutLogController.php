@@ -215,8 +215,11 @@ class WorkoutLogController extends Controller
     public function insights(Request $request)
     {
         try {
-            // $user = Auth::user();
-            $memberId = 4;
+            // Fix floating-point serialization on servers with high serialize_precision
+            ini_set('serialize_precision', -1);
+
+            $user = Auth::user();
+            $memberId = $user->member_id;
 
             $now = Carbon::now();
             $startOfWeek = $now->copy()->startOfWeek();
