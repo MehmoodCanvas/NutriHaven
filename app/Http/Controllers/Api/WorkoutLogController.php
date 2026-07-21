@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class WorkoutLogController extends Controller
@@ -176,9 +177,67 @@ class WorkoutLogController extends Controller
                     }
                 });
 
+                // Build exercises_data from log exercises (not original plan)
+                // so "Repeat this workout" uses the actual logged exercises
+                $logExercisesData = $log->exercises->map(function ($exercise) {
+                    $masterExercise = $exercise->masterExercise;
+                    $muscleGroup = $masterExercise ? $masterExercise->muscleGroup : null;
+                    return [
+                        'id' => $masterExercise->id ?? null,
+                        'name' => $masterExercise->name ?? 'Unknown Exercise',
+                        'is_time_based' => $masterExercise->is_time_based ?? false,
+                        'difficulty' => $masterExercise->difficulty ?? null,
+                        'muscle_group_id' => $masterExercise->muscle_group_id ?? null,
+                        'primary_muscles' => $masterExercise->primary_muscles ?? null,
+                        'secondary_muscles' => $masterExercise->secondary_muscles ?? null,
+                        'goals' => $masterExercise->goals ?? [],
+                        'duration_minutes' => $masterExercise->duration_minutes ?? null,
+                        'default_sets' => $exercise->sets->map(function ($set) {
+                            return [
+                                'set' => $set->set_number,
+                                'reps' => $set->reps,
+                                'weight' => $set->weight !== null ? (float) number_format((float) $set->weight, 2, '.', '') : null,
+                                'duration' => $set->duration,
+                                'is_completed' => false,
+                            ];
+                        })->values()->toArray(),
+                        'workout_video_id' => $masterExercise->workout_video_id ?? null,
+                        'equipment_required_id' => $masterExercise->equipment_required_id ?? null,
+                        'aux_equipment_id' => $masterExercise->aux_equipment_id ?? null,
+                        'exercise_image' => $masterExercise->exercise_image ?? null,
+                        'created_at' => $masterExercise->created_at ?? null,
+                        'updated_at' => $masterExercise->updated_at ?? null,
+                        'muscle_group' => $muscleGroup ? [
+                            'id' => $muscleGroup->id,
+                            'name' => $muscleGroup->name,
+                            'muscle_image' => $muscleGroup->muscle_image ?? null,
+                            'created_at' => $muscleGroup->created_at,
+                            'updated_at' => $muscleGroup->updated_at,
+                        ] : null,
+                    ];
+                })->values()->toArray();
+
+                // Override workout_plan exercises_data with log exercises
+                $workoutPlan = $log->workoutPlan;
+                if ($workoutPlan) {
+                    $workoutPlan = $workoutPlan->toArray();
+                    $originalExercisesData = $workoutPlan['exercises_data'] ?? [];
+                    // Preserve original structure (filters, etc.) but replace exercises with log exercises
+                    if (is_array($originalExercisesData) && isset($originalExercisesData['exercises'])) {
+                        $originalExercisesData['exercises'] = $logExercisesData;
+                        $originalExercisesData['total'] = count($logExercisesData);
+                    } else {
+                        $originalExercisesData = [
+                            'exercises' => $logExercisesData,
+                            'total' => count($logExercisesData),
+                        ];
+                    }
+                    $workoutPlan['exercises_data'] = $originalExercisesData;
+                }
+
                 return [
                     'id' => $log->id,
-                    'workout_plan' => $log->workoutPlan,
+                    'workout_plan' => $workoutPlan,
                     'name' => $log->name ?? 'Workout',
                     'date' => Carbon::parse($log->log_date)->format('M d, Y'),
                     'duration' => "{$durationInMinutes} min",
@@ -201,6 +260,11 @@ class WorkoutLogController extends Controller
             ], 200);
 
         } catch (\Throwable $th) {
+            Log::error('Workout history error: ' . $th->getMessage(), [
+                'file' => $th->getFile(),
+                'line' => $th->getLine(),
+                'trace' => $th->getTraceAsString()
+            ]);
             return response()->json([
                 'status' => false,
                 'message' => 'An error occurred while retrieving history',
