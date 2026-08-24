@@ -79,8 +79,10 @@ class AdminMasterExerciseController extends Controller
             'equipment_required_id' => 'nullable|exists:equipments,id',
             'aux_equipment_id' => 'nullable|exists:aux_equipments,id',
             'workout_video_id' => 'nullable|exists:workout_videos,workout_videos_id',
-            'primary_muscles' => 'nullable|string',
-            'secondary_muscles' => 'nullable|string',
+            'primary_muscles' => 'nullable|array',
+            'primary_muscles.*' => 'string',
+            'secondary_muscles' => 'nullable|array',
+            'secondary_muscles.*' => 'string',
             'goals' => 'nullable|array',
             'goals.*' => 'string',
             'exercise_image' => 'nullable|image|max:5120',
@@ -88,9 +90,23 @@ class AdminMasterExerciseController extends Controller
 
         $data = $request->only([
             'name', 'muscle_group_id', 'difficulty', 'equipment_required_id',
-            'aux_equipment_id', 'workout_video_id', 'primary_muscles', 'secondary_muscles'
+            'aux_equipment_id', 'workout_video_id'
         ]);
         $data['is_time_based'] = $request->has('is_time_based');
+
+        // Handle primary_muscles as array
+        if ($request->filled('primary_muscles')) {
+            $data['primary_muscles'] = $request->primary_muscles;
+        } else {
+            $data['primary_muscles'] = null;
+        }
+
+        // Handle secondary_muscles as array
+        if ($request->filled('secondary_muscles')) {
+            $data['secondary_muscles'] = $request->secondary_muscles;
+        } else {
+            $data['secondary_muscles'] = null;
+        }
 
         // Handle goals as array
         if ($request->filled('goals')) {
@@ -146,8 +162,10 @@ class AdminMasterExerciseController extends Controller
             'equipment_required_id' => 'nullable|exists:equipments,id',
             'aux_equipment_id' => 'nullable|exists:aux_equipments,id',
             'workout_video_id' => 'nullable|exists:workout_videos,workout_videos_id',
-            'primary_muscles' => 'nullable|string',
-            'secondary_muscles' => 'nullable|string',
+            'primary_muscles' => 'nullable|array',
+            'primary_muscles.*' => 'string',
+            'secondary_muscles' => 'nullable|array',
+            'secondary_muscles.*' => 'string',
             'goals' => 'nullable|array',
             'goals.*' => 'string',
             'exercise_image' => 'nullable|image|max:5120',
@@ -155,7 +173,7 @@ class AdminMasterExerciseController extends Controller
 
         $data = $request->only([
             'name', 'muscle_group_id', 'difficulty', 'equipment_required_id',
-            'aux_equipment_id', 'workout_video_id', 'primary_muscles', 'secondary_muscles'
+            'aux_equipment_id', 'workout_video_id'
         ]);
         $data['is_time_based'] = $request->has('is_time_based');
 
@@ -163,6 +181,20 @@ class AdminMasterExerciseController extends Controller
         $data['equipment_required_id'] = $request->equipment_required_id ?: null;
         $data['aux_equipment_id'] = $request->aux_equipment_id ?: null;
         $data['workout_video_id'] = $request->workout_video_id ?: null;
+
+        // Handle primary_muscles as array
+        if ($request->filled('primary_muscles')) {
+            $data['primary_muscles'] = $request->primary_muscles;
+        } else {
+            $data['primary_muscles'] = null;
+        }
+
+        // Handle secondary_muscles as array
+        if ($request->filled('secondary_muscles')) {
+            $data['secondary_muscles'] = $request->secondary_muscles;
+        } else {
+            $data['secondary_muscles'] = null;
+        }
 
         // Handle goals as array
         if ($request->filled('goals')) {

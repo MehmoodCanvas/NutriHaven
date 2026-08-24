@@ -18,8 +18,8 @@ class MasterExerciseController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('primary_muscles', 'LIKE', "%{$search}%")
-                  ->orWhere('secondary_muscles', 'LIKE', "%{$search}%")
+                  ->orWhereJsonContains('primary_muscles', $search)
+                  ->orWhereJsonContains('secondary_muscles', $search)
                   ->orWhere('difficulty', 'LIKE', "%{$search}%")
                   ->orWhereJsonContains('goals', $search)
                   // Search in Muscle Group Name
@@ -102,6 +102,16 @@ class MasterExerciseController extends Controller
         }
 
         $exercises = $query->paginate($perPage);
+
+        $exercises->getCollection()->transform(function ($exercise) {
+            if (is_array($exercise->primary_muscles)) {
+                $exercise->primary_muscles = implode(', ', $exercise->primary_muscles);
+            }
+            if (is_array($exercise->secondary_muscles)) {
+                $exercise->secondary_muscles = implode(', ', $exercise->secondary_muscles);
+            }
+            return $exercise;
+        });
 
         return response()->json([
             'status' => true,

@@ -67,6 +67,16 @@ class ImportExercises extends Command
             $primaryMuscles   = isset($row[5]) ? trim($row[5]) : null;
             $secondaryMuscles = isset($row[6]) ? trim($row[6]) : null;
 
+            // Convert comma-separated muscles to arrays for JSON storage
+            if ($primaryMuscles) {
+                $primaryMuscles = array_values(array_filter(array_map('trim', explode(',', $primaryMuscles))));
+                if (empty($primaryMuscles)) $primaryMuscles = null;
+            }
+            if ($secondaryMuscles) {
+                $secondaryMuscles = array_values(array_filter(array_map('trim', explode(',', $secondaryMuscles))));
+                if (empty($secondaryMuscles)) $secondaryMuscles = null;
+            }
+
             if (empty($exerciseName))
                 continue;
 

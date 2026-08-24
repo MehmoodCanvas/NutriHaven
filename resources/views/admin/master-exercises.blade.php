@@ -151,8 +151,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Primary Muscles</label>
-                            <select class="form-select select2-muscles-create-primary" name="primary_muscles">
-                                <option value="">Select Primary Muscle</option>
+                            <select class="form-select select2-muscles-create-primary" name="primary_muscles[]" multiple="multiple">
                                 @foreach($muscleOptions as $muscle)
                                     <option value="{{ $muscle }}">{{ $muscle }}</option>
                                 @endforeach
@@ -160,8 +159,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Secondary Muscles</label>
-                            <select class="form-select select2-muscles-create-secondary" name="secondary_muscles">
-                                <option value="">Select Secondary Muscle</option>
+                            <select class="form-select select2-muscles-create-secondary" name="secondary_muscles[]" multiple="multiple">
                                 @foreach($muscleOptions as $muscle)
                                     <option value="{{ $muscle }}">{{ $muscle }}</option>
                                 @endforeach
@@ -239,14 +237,14 @@ $(document).ready(function() {
 
     $('.select2-muscles-create-primary').select2({
         theme: 'bootstrap-5',
-        placeholder: 'Search & Select Primary Muscle',
+        placeholder: 'Select Primary Muscles',
         allowClear: true,
         dropdownParent: modalEl
     });
 
     $('.select2-muscles-create-secondary').select2({
         theme: 'bootstrap-5',
-        placeholder: 'Search & Select Secondary Muscle',
+        placeholder: 'Select Secondary Muscles',
         allowClear: true,
         dropdownParent: modalEl
     });

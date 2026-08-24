@@ -14,6 +14,8 @@ class MasterExercise extends Model
     protected $casts = [
         'difficulty' => 'string',
         'goals' => 'array',
+        'primary_muscles' => 'array',
+        'secondary_muscles' => 'array',
         'default_sets' => 'array',
         'is_time_based' => 'boolean',
     ];

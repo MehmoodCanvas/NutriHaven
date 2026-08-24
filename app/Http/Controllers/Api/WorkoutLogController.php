@@ -188,8 +188,8 @@ class WorkoutLogController extends Controller
                         'is_time_based' => $masterExercise->is_time_based ?? false,
                         'difficulty' => $masterExercise->difficulty ?? null,
                         'muscle_group_id' => $masterExercise->muscle_group_id ?? null,
-                        'primary_muscles' => $masterExercise->primary_muscles ?? null,
-                        'secondary_muscles' => $masterExercise->secondary_muscles ?? null,
+                        'primary_muscles' => is_array($masterExercise->primary_muscles) ? implode(', ', $masterExercise->primary_muscles) : ($masterExercise->primary_muscles ?? null),
+                        'secondary_muscles' => is_array($masterExercise->secondary_muscles) ? implode(', ', $masterExercise->secondary_muscles) : ($masterExercise->secondary_muscles ?? null),
                         'goals' => $masterExercise->goals ?? [],
                         'duration_minutes' => $masterExercise->duration_minutes ?? null,
                         'default_sets' => $exercise->sets->map(function ($set) {

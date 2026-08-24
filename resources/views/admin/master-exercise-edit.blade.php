@@ -75,19 +75,23 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Primary Muscles</label>
-                                    <select class="form-select select2-muscles-edit-primary" name="primary_muscles">
-                                        <option value="">Select Primary Muscle</option>
+                                    @php
+                                        $selectedPrimary = is_array($exercise->primary_muscles) ? $exercise->primary_muscles : [];
+                                    @endphp
+                                    <select class="form-select select2-muscles-edit-primary" name="primary_muscles[]" multiple="multiple">
                                         @foreach($muscleOptions as $muscle)
-                                            <option value="{{ $muscle }}" {{ $exercise->primary_muscles == $muscle ? 'selected' : '' }}>{{ $muscle }}</option>
+                                            <option value="{{ $muscle }}" {{ in_array($muscle, $selectedPrimary) ? 'selected' : '' }}>{{ $muscle }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Secondary Muscles</label>
-                                    <select class="form-select select2-muscles-edit-secondary" name="secondary_muscles">
-                                        <option value="">Select Secondary Muscle</option>
+                                    @php
+                                        $selectedSecondary = is_array($exercise->secondary_muscles) ? $exercise->secondary_muscles : [];
+                                    @endphp
+                                    <select class="form-select select2-muscles-edit-secondary" name="secondary_muscles[]" multiple="multiple">
                                         @foreach($muscleOptions as $muscle)
-                                            <option value="{{ $muscle }}" {{ $exercise->secondary_muscles == $muscle ? 'selected' : '' }}>{{ $muscle }}</option>
+                                            <option value="{{ $muscle }}" {{ in_array($muscle, $selectedSecondary) ? 'selected' : '' }}>{{ $muscle }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -177,13 +181,13 @@ $(document).ready(function() {
 
     $('.select2-muscles-edit-primary').select2({
         theme: 'bootstrap-5',
-        placeholder: 'Search & Select Primary Muscle',
+        placeholder: 'Select Primary Muscles',
         allowClear: true
     });
 
     $('.select2-muscles-edit-secondary').select2({
         theme: 'bootstrap-5',
-        placeholder: 'Search & Select Secondary Muscle',
+        placeholder: 'Select Secondary Muscles',
         allowClear: true
     });
 
